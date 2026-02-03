@@ -1,0 +1,112 @@
+---
+title: "Adding AI to My App: Easier Than Expected, Costlier Too"
+date: "2025-09-02"
+description: "I integrated GPT into my MERN app. The API was simple. Managing costs and expectations was the hard part."
+tags: ["AI", "OpenAI", "MERN"]
+readingTime: "7 min read"
+---
+
+Everyone's adding AI to everything now. I wanted to see what the hype was about. So I added GPT to my app.
+
+The integration was surprisingly easy. The aftermath was more complicated.
+
+## The First Integration
+
+OpenAI's API is straightforward. Get an API key, install the package, make a call:
+
+```javascript
+const response = await openai.chat.completions.create({
+  model: 'gpt-4o-mini',
+  messages: [{ role: 'user', content: prompt }]
+})
+```
+
+That's basically it. I had something working in an hour.
+
+The hard part wasn't the code. It was figuring out what to actually use AI for.
+
+## Finding the Right Use Case
+
+I tried to make AI do too much at first. Generate entire features, write complex content, answer any question.
+
+Turns out AI is better at smaller, focused tasks:
+- Summarizing long text
+- Suggesting tags or categories
+- Improving user-written content
+- Answering specific questions about app data
+
+My killer feature ended up being auto-generating descriptions for user uploads. Nobody likes writing descriptions. AI does it acceptably well.
+
+## Prompt Engineering Is Real
+
+Same question, different phrasing, wildly different results.
+
+I spent hours tweaking prompts. Adding context, specifying format, giving examples. The difference between a good and bad prompt is huge.
+
+Things that helped:
+- Be specific about the output format you want
+- Give examples of good responses
+- Include relevant context, but not too much
+- Tell it what NOT to do
+
+## The Cost Problem
+
+API calls add up fast. Each request costs money. Users don't care about your API bill.
+
+I made every mistake:
+- Not caching responses for similar inputs
+- Calling the API on every keystroke
+- Using GPT-4 when 3.5 was fine
+- No rate limiting per user
+
+My first bill was a shock. Had to add limits fast.
+
+## Rate Limiting and Caching
+
+Now I:
+- Cache responses for identical inputs
+- Rate limit per user (10 requests per minute)
+- Use cheaper models for simple tasks
+- Queue expensive operations instead of real-time
+
+The user experience is slightly worse. But I can afford to keep the feature.
+
+## Handling Failures
+
+AI APIs go down. They time out. They return weird stuff.
+
+Always have a fallback. If AI fails, show a helpful message or skip the feature gracefully. Don't let your whole app break because OpenAI is having issues.
+
+```javascript
+try {
+  const suggestion = await getAISuggestion(content)
+  return suggestion
+} catch (error) {
+  console.error('AI failed:', error)
+  return 'Unable to generate suggestion'
+}
+```
+
+## User Expectations
+
+Users expect AI to be magic. It's not.
+
+I had to add disclaimers. "AI-generated suggestions may be inaccurate." Some users were treating AI outputs as facts.
+
+Also important: let users edit or reject AI suggestions. Never auto-publish AI content without review.
+
+## Streaming Responses
+
+For longer outputs, streaming is way better than waiting. The user sees text appearing instead of staring at a spinner.
+
+OpenAI supports streaming. Takes more code but the UX improvement is worth it.
+
+## Was It Worth Adding?
+
+Yes, but with caveats.
+
+Users like the AI features. They feel modern. But the maintenance and cost overhead is real.
+
+Would I add AI to every project? No. Does it make sense here? After some iteration, yeah.
+
+The key is finding the right use case. AI that saves users time is valuable. AI for the sake of AI is just expensive.

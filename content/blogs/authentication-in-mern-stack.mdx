@@ -1,0 +1,83 @@
+---
+title: "Auth in MERN: Every Mistake I Made So You Don't Have To"
+date: "2025-11-10"
+description: "I implemented authentication three times before getting it right. JWT confusion, cookie problems, and security holes I didn't know I had."
+tags: ["Authentication", "Security", "MERN"]
+readingTime: "9 min read"
+---
+
+Authentication looks simple on the surface. User logs in, you give them a token, done.
+
+But then you start asking questions. Where do I store the token? How do I refresh it? What happens if someone steals it? And suddenly it's complicated.
+
+## My First Implementation
+
+I stored the JWT in localStorage. Sent it in the Authorization header on every request. This is what most tutorials teach you.
+
+It works. But it's not great for security.
+
+LocalStorage is accessible to any JavaScript on your page. If someone injects malicious code (XSS), they can steal tokens. I didn't think about this until a security-minded friend reviewed my code.
+
+## The Cookie Approach
+
+Switched to HTTP-only cookies. The browser handles sending them automatically. JavaScript can't access them. Better for security.
+
+But now I had CORS problems. The cookie wasn't being sent on cross-origin requests. Spent a whole day on this.
+
+The fix:
+
+```javascript
+// Server
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}))
+
+// Client fetch
+fetch(url, { credentials: 'include' })
+```
+
+Both sides need to agree. The server allows credentials, the client sends them.
+
+## Refresh Tokens
+
+My tokens expired after an hour. Users kept getting logged out. Annoying.
+
+Refresh tokens solved this. Short-lived access token for API requests. Long-lived refresh token to get new access tokens without logging in again.
+
+The tricky part is storing the refresh token securely and rotating it to prevent replay attacks. I keep them in the database and invalidate old ones when issuing new ones.
+
+## The Logout Problem
+
+Logging out with JWTs is weird. The token is still valid even after logout. You can't really "invalidate" a JWT without keeping a blocklist somewhere.
+
+I went with short expiry times and a token version in the database. When a user logs out, I increment their token version. Old tokens fail validation even if they haven't expired.
+
+## Password Hashing
+
+I knew to use bcrypt. But I didn't know about timing attacks at first.
+
+When comparing passwords, you need to use constant-time comparison. bcrypt.compare does this automatically. But I had some custom code that didn't. Oops.
+
+## Session vs Token
+
+I eventually realized that for my use case, sessions might have been simpler. Tokens are great for mobile apps or when you need to share auth across services. For a basic web app, session cookies work fine.
+
+But I learned a lot from implementing JWTs. Now I actually understand the tradeoffs instead of just following tutorials blindly.
+
+## Security Checklist
+
+Things I check now:
+
+- HTTP-only cookies for tokens
+- Secure flag in production (HTTPS only)
+- SameSite attribute to prevent CSRF
+- Rate limiting on login endpoints
+- No sensitive data in JWT payload
+- Proper password hashing with bcrypt
+
+## Still Paranoid
+
+I still worry about auth. Every few months I read about some new attack vector and wonder if my implementation is vulnerable.
+
+That's probably healthy. Auth is important. A bit of paranoia keeps you careful.

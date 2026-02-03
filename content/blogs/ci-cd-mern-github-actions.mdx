@@ -1,0 +1,94 @@
+---
+title: "Setting Up CI/CD for MERN: My GitHub Actions Journey"
+date: "2025-11-28"
+description: "Automated deployments sounded scary until I actually set them up. Here's how I went from manual FTP uploads to proper CI/CD."
+tags: ["CI/CD", "GitHub Actions", "DevOps"]
+readingTime: "7 min read"
+---
+
+I used to deploy by FTPing files to my server. Yes, in 2024. I know.
+
+Every deployment was stressful. Did I forget a file? Did I upload to the wrong folder? Is production down because I made a typo?
+
+CI/CD fixed all of that.
+
+## Why I Was Scared
+
+The YAML files looked intimidating. All those nested keys and weird syntax. I thought you needed DevOps experience to understand this stuff.
+
+You don't. It's just a list of commands that run when something happens. That's it.
+
+## My First Workflow
+
+I started simple. Just run tests when someone opens a pull request. If tests fail, don't let them merge.
+
+```yaml
+name: Test
+on: [pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm test
+```
+
+That's the whole thing. Nothing fancy. But now bad code can't get to main.
+
+## The Deployment Part
+
+Testing was easy. Deployment took me a while to figure out.
+
+I'm using a VPS, so I needed to SSH in and pull the latest code. GitHub Actions has secrets for storing SSH keys. You add them in your repo settings and reference them in the workflow.
+
+The scary part was giving a GitHub server access to my production machine. But it's actually fine if you use deploy keys with limited permissions.
+
+## Secrets Management
+
+Hardcoding secrets in your workflow file is obviously bad. GitHub encrypts secrets at rest and masks them in logs. But I still made mistakes.
+
+I once printed my env file for debugging and my API key showed up in the logs. GitHub caught it and masked it, but still. Check your logs carefully.
+
+## Build and Deploy Steps
+
+My current workflow:
+
+1. Run tests
+2. Build the React app
+3. Build the Docker image
+4. Push to container registry
+5. SSH to server and pull new image
+6. Restart containers
+
+Takes about 4 minutes. I used to spend 20 minutes doing this manually. And I'd make mistakes.
+
+## Caching Dependencies
+
+The workflow was slow until I added caching. npm install was running from scratch every time. Now it caches node_modules and only reinstalls when package-lock changes.
+
+```yaml
+- uses: actions/cache@v4
+  with:
+    path: ~/.npm
+    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+```
+
+Cut my build time in half.
+
+## What Broke
+
+Plenty of things. The workflow passed locally but failed in CI because I had different Node versions. Tests failed because they depended on a local MongoDB that didn't exist in the runner.
+
+Each failure taught me something. Now I test in containers that match production. Fewer surprises.
+
+## The Peace of Mind
+
+The best part isn't the automation. It's knowing that if tests pass, the code probably works. I can merge PRs without fear.
+
+I still sometimes watch the workflow run. Old habits. But I don't have to.
+
+That's the point.

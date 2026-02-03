@@ -1,0 +1,101 @@
+---
+title: "Environment Variables in MERN: I Learned the Hard Way"
+date: "2025-10-05"
+description: "Pushed secrets to GitHub. Twice. Here's how I finally set up proper env var handling."
+tags: ["Environment", "Security", "MERN"]
+readingTime: "6 min read"
+---
+
+I pushed my database password to GitHub. The commit sat there for two hours before I noticed.
+
+Then I did it again three months later.
+
+Yeah. Let's talk about environment variables.
+
+## The Problem With .env Files
+
+Everyone uses .env files. They're convenient. You put your secrets there, add .env to .gitignore, and you're safe.
+
+Except .gitignore doesn't help if you already committed the file. Git remembers. Even if you delete it, it's in the history.
+
+I had to rotate every credential in that repo. Painful lesson.
+
+## The gitignore Order Matters
+
+Add .env to .gitignore before creating the file. Not after. The moment you create a file, git can track it. If you gitignore it later, git might already have staged it.
+
+I now add .env to .gitignore in my very first commit. Before anything else.
+
+## Client vs Server
+
+React apps bundle everything into JavaScript that runs in the browser. If you put a secret in your React code, users can see it. Doesn't matter if it's in an env var.
+
+Only put public stuff in REACT_APP or NEXT_PUBLIC env vars. API keys for services that require authentication should stay on the server.
+
+I once put a Stripe secret key in my React app. Luckily it was test mode. But still. Could have been bad.
+
+## Validation at Startup
+
+For a while, my app would start fine but crash later when it tried to use a missing env var. Confusing errors deep in some function.
+
+Now I validate env vars at startup:
+
+```javascript
+const required = ['DATABASE_URL', 'JWT_SECRET', 'REDIS_URL']
+for (const name of required) {
+  if (!process.env[name]) {
+    console.error(`Missing required env var: ${name}`)
+    process.exit(1)
+  }
+}
+```
+
+Fail fast. Know immediately if something's wrong.
+
+## Different Environments
+
+I used to have one .env file and manually change values for development vs production. Error-prone and annoying.
+
+Now I have:
+- .env.development for local
+- .env.production for prod
+- .env.example committed to git showing what vars are needed
+
+Some frameworks load these automatically based on NODE_ENV. Worth checking if yours does.
+
+## Secrets in Docker
+
+Docker adds complexity. You can pass env vars when running containers, use docker-compose environment section, or use Docker secrets.
+
+For development, docker-compose with an env_file works:
+
+```yaml
+services:
+  api:
+    env_file:
+      - .env
+```
+
+For production, I use the hosting platform's secret management. Vercel, Railway, whatever. They encrypt secrets and inject them at runtime.
+
+## The .env.example Trick
+
+I keep a .env.example file with all required variables but fake values:
+
+```
+DATABASE_URL=mongodb://localhost:27017/myapp
+JWT_SECRET=your-secret-here
+STRIPE_KEY=sk_test_xxx
+```
+
+New developers know exactly what they need to set up. No guessing.
+
+## Current Setup
+
+- .env files for local dev, never committed
+- .env.example committed with dummy values
+- Validation at app startup
+- Production secrets in hosting platform
+- No secrets in client-side code ever
+
+It took me embarrassingly long to get here. But I haven't leaked credentials in over a year now. Progress.

@@ -1,0 +1,73 @@
+---
+title: "Dockerizing My MERN App: The Mess Before the Magic"
+date: "2025-12-15"
+description: "I spent three days fighting Docker before it finally clicked. Here's what actually helped me understand containers."
+tags: ["Docker", "MERN", "DevOps"]
+readingTime: "8 min read"
+---
+
+I thought Docker would be easy. Everyone said it makes deployment simple. Just write a Dockerfile and you're done, right?
+
+Wrong. So wrong.
+
+## The First Attempt
+
+My first Dockerfile was a disaster. I copied something from Stack Overflow and hoped for the best. The build took 15 minutes. The image was 2GB. And it didn't even work.
+
+The error messages were cryptic. Something about "cannot find module" even though the module was clearly there. I checked like fifty times.
+
+## What I Was Doing Wrong
+
+Turns out I was copying node_modules from my Mac into a Linux container. That breaks everything because some packages have native bindings.
+
+The fix was stupid simple:
+
+```dockerfile
+COPY package*.json ./
+RUN npm install
+COPY . .
+```
+
+Copy package.json first. Install dependencies inside the container. Then copy the rest. This also makes builds faster because Docker caches the npm install layer.
+
+## The MongoDB Problem
+
+Getting MongoDB to talk to my Node app inside Docker was another headache. I kept using `localhost` in my connection string. But inside Docker, localhost means the container itself, not my machine.
+
+I needed to use service names from docker-compose:
+
+```yaml
+services:
+  api:
+    build: ./server
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/myapp
+  mongo:
+    image: mongo:6
+```
+
+That `mongo` in the connection string? That's the service name. Docker's internal DNS resolves it automatically. I wish someone had told me this sooner.
+
+## Multi-Stage Builds
+
+My images were still huge. Then I learned about multi-stage builds. Game changer.
+
+You build your app in one stage with all the dev dependencies. Then you copy only the production files to a smaller base image. Went from 2GB to 200MB.
+
+## Hot Reload in Development
+
+Production was working but development sucked. I had to rebuild the image every time I changed a file. That's not how I want to code.
+
+Volumes fixed this. Mount your source code as a volume and nodemon sees the changes. The container uses your local files instead of the copied ones.
+
+## What I Wish I Knew
+
+Docker isn't magic. It's just Linux processes with isolation. Understanding that helped me debug problems faster.
+
+Also, read the logs. Like actually read them. The answer is usually there. I spent hours googling when the fix was in the error message the whole time.
+
+## Still Learning
+
+I'm not a Docker expert. I still google stuff constantly. But my deploys are consistent now. Works on my machine actually means something.
+
+That's worth the three days of frustration.

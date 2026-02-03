@@ -1,0 +1,115 @@
+---
+title: "What I Learned From Using AI APIs in Production"
+date: "2025-08-15"
+description: "Six months of running AI features in a real app. The gotchas, the surprises, and what I'd do differently."
+tags: ["AI", "Production", "Lessons"]
+readingTime: "8 min read"
+---
+
+I've had AI features in production for about six months now. Long enough to learn what works and what doesn't.
+
+This isn't about integration. It's about what happens after.
+
+## Latency Is a Problem
+
+AI APIs are slow compared to normal database queries. 2-3 seconds is common. Sometimes longer.
+
+Users notice. Some assumed the app was broken.
+
+Solutions that helped:
+- Show a loading state immediately
+- Use streaming for long responses
+- Process in background and notify when done
+- Cache aggressively
+
+The UX work around AI is as important as the AI itself.
+
+## Consistency Is Hard
+
+Same input, different outputs. That's how these models work. But users expect consistency.
+
+If they ask the same question twice and get different answers, they lose trust.
+
+I added temperature settings and seed values where supported. Lower temperature means more consistent outputs. Not perfect, but better.
+
+## Costs Scale Weirdly
+
+Normal server costs scale with users. AI costs scale with usage per user.
+
+One power user can cost more than a hundred casual users. I had to add per-user limits and think about pricing differently.
+
+Some apps charge extra for AI features. Makes sense now that I understand the economics.
+
+## Model Updates Break Things
+
+OpenAI updates their models. The same model name can behave differently month to month.
+
+I had prompts that worked fine, then suddenly gave worse results after an update. No warning.
+
+Testing is essential. I have a set of test prompts I run after any model update. Catches regressions before users notice.
+
+## Context Windows Matter
+
+You can only send so much text to an AI. Hit the limit and it just stops reading.
+
+For my summarization feature, long documents would get truncated. The summary would be incomplete.
+
+Had to implement chunking. Split long content, summarize each chunk, then summarize the summaries. More complex but necessary.
+
+## Error Handling Gets Complex
+
+AI can fail in many ways:
+- API timeout
+- Rate limit hit
+- Invalid response format
+- Content filtered
+- Model overloaded
+
+Each needs different handling. Rate limits should back off. Timeouts should retry once. Filtered content should tell the user why.
+
+I have a whole error taxonomy now. Never thought AI errors would need this much structure.
+
+## Users Try Weird Things
+
+Prompt injection is real. Users try to make your AI say inappropriate things or reveal system prompts.
+
+I learned to:
+- Keep system prompts minimal
+- Validate and sanitize user input
+- Filter outputs before displaying
+- Monitor for abuse patterns
+
+Most users are fine. But a few will test every boundary.
+
+## Logging Is Essential
+
+I log every AI interaction. Input, output, latency, cost, errors.
+
+This helps with:
+- Debugging weird responses
+- Understanding usage patterns  
+- Optimizing prompts
+- Tracking costs
+- Identifying abuse
+
+Storage costs for logs are nothing compared to API costs. Worth it.
+
+## The Value Question
+
+After six months, I keep asking: is this worth it?
+
+For some features, absolutely. Users love the auto-categorization. It saves them real time.
+
+For others, not sure. The AI-generated suggestions are fancy but rarely used.
+
+I'm keeping what works and cutting what doesn't. AI isn't magic. It's another tool that needs to prove its value.
+
+## What I'd Tell Past Me
+
+- Start with one focused AI feature, not ten
+- Budget 3x what you think you'll spend
+- Cache everything possible
+- Plan for failures from day one
+- Watch your logs religiously
+
+AI in production is different from AI in demos. The demos are easy. The production part is where you learn.

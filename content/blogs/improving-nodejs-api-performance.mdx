@@ -1,0 +1,108 @@
+---
+title: "My Node.js API Was Slow. Here's What Actually Helped."
+date: "2025-10-22"
+description: "Response times were bad. Users complained. I tried everything. Some things worked, most didn't. This is what made a real difference."
+tags: ["Node.js", "Performance", "Backend"]
+readingTime: "8 min read"
+---
+
+My API was slow. Not unusably slow, but slow enough that users noticed. The dashboard took 3 seconds to load. That's forever in web time.
+
+I spent two weeks optimizing. Here's what actually moved the needle.
+
+## Finding the Problem First
+
+I started optimizing random things before measuring anything. Don't do this.
+
+Added logging with timestamps to every major operation. Found out 80% of the time was spent in two database queries. I was optimizing the wrong things entirely.
+
+## The N+1 Query Problem
+
+This was my biggest issue. I was fetching a list of items, then running a separate query for each item's related data.
+
+```javascript
+// Bad: N+1 queries
+const posts = await Post.find()
+for (const post of posts) {
+  post.author = await User.findById(post.authorId)
+}
+```
+
+50 posts meant 51 database queries. That's insane.
+
+The fix was to batch the related queries:
+
+```javascript
+// Good: 2 queries
+const posts = await Post.find()
+const authorIds = posts.map(p => p.authorId)
+const authors = await User.find({ _id: { $in: authorIds } })
+// then map authors to posts
+```
+
+Response time dropped from 2 seconds to 200ms.
+
+## Indexes
+
+I had no indexes on my frequently queried fields. MongoDB was doing full collection scans on every request.
+
+Added indexes to the fields I filter and sort by:
+
+```javascript
+postSchema.index({ authorId: 1 })
+postSchema.index({ createdAt: -1 })
+postSchema.index({ status: 1, createdAt: -1 })
+```
+
+Some queries went from 500ms to 5ms. Not a typo.
+
+## Caching Hot Data
+
+Some data rarely changes but gets requested constantly. User profiles, app settings, category lists. Perfect for caching.
+
+I used Redis at first. Then realized for my scale, an in-memory cache was enough. Node-cache did the job.
+
+```javascript
+const cache = new NodeCache({ stdTTL: 300 })
+
+async function getCategories() {
+  const cached = cache.get('categories')
+  if (cached) return cached
+  
+  const categories = await Category.find()
+  cache.set('categories', categories)
+  return categories
+}
+```
+
+Cache invalidation is the hard part. I went with time-based expiry for most things. Good enough for my use case.
+
+## Pagination
+
+I was returning all results by default. Thousands of records in a single response. Why did I think that was okay?
+
+Added limit and skip. Default to 20 items. Now responses are small and fast.
+
+## Compression
+
+Enabled gzip compression. Response sizes dropped by 70%. Barely any CPU overhead.
+
+One line of code:
+
+```javascript
+app.use(compression())
+```
+
+Should have done this from the start.
+
+## What Didn't Help
+
+- Switching to a faster JSON serializer. Barely noticeable.
+- Adding more RAM to the server. The bottleneck was I/O, not memory.
+- Using clustering. Made things worse because my code wasn't thread-safe.
+
+## Current State
+
+The dashboard loads in 400ms now. Still not perfect, but users stopped complaining.
+
+The biggest lesson: measure first. I wasted time on micro-optimizations that didn't matter. The real gains came from fixing the obvious stuff I was ignoring.

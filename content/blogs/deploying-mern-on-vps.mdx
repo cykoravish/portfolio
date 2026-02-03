@@ -1,0 +1,112 @@
+---
+title: "Deploying MERN on a VPS: What They Don't Tell You"
+date: "2025-09-18"
+description: "I wanted to learn 'real' deployment instead of using Vercel. Three weeks later, I had opinions."
+tags: ["Deployment", "VPS", "DevOps"]
+readingTime: "9 min read"
+---
+
+Vercel and Railway are great. But I wanted to understand what happens underneath. So I rented a VPS and tried to deploy my MERN app the hard way.
+
+It was way harder than I expected.
+
+## Choosing a VPS
+
+I went with a $5 Hetzner server. 2GB RAM, 1 CPU. Seemed like enough for a small app.
+
+It was barely enough. MongoDB alone wants 1GB of RAM. Add Node, React, and some headroom for builds, and you're pushing it.
+
+$10-12/month is more realistic for MERN. Lesson learned.
+
+## Initial Setup
+
+Fresh server, just a command line. No idea what to do first.
+
+What I eventually figured out:
+1. Update everything (apt update && apt upgrade)
+2. Create a non-root user
+3. Set up SSH keys, disable password login
+4. Configure the firewall (ufw)
+5. Install fail2ban for brute force protection
+
+The security stuff felt paranoid until I checked the logs. Bots were trying to SSH into my server within minutes of it being online. Thousands of attempts. Wild.
+
+## Installing Everything
+
+Node, MongoDB, Nginx, PM2. Each one has its own installation dance. MongoDB especially has like 6 commands to add their repository and GPG key.
+
+I scripted everything so I can recreate the setup. Spent more time on the script than the actual installation. Worth it for next time.
+
+## Nginx as Reverse Proxy
+
+Node runs on port 3000. But you want users to access port 80/443. Nginx sits in front and forwards requests.
+
+Basic config:
+
+```nginx
+server {
+    listen 80;
+    server_name myapp.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+    }
+}
+```
+
+WebSocket support needed those upgrade headers. Took me a while to figure out why my real-time features were broken.
+
+## SSL With Let's Encrypt
+
+Certbot makes this easy. Run it, answer some questions, it modifies your nginx config automatically. Free SSL.
+
+But the certificate expires every 90 days. Set up auto-renewal or you'll get scary warnings in browsers.
+
+## PM2 for Process Management
+
+If your Node app crashes, you want it to restart automatically. PM2 does this. Also handles logs, clustering, and startup scripts.
+
+```bash
+pm2 start server.js --name myapp
+pm2 save
+pm2 startup
+```
+
+Now it survives reboots and crashes. Peace of mind.
+
+## The Deployment Process
+
+Initially I did it manually. SSH in, git pull, npm install, restart PM2. Tedious and error-prone.
+
+Then I set up a simple deploy script that runs via SSH from GitHub Actions. Push to main, tests pass, server updates automatically.
+
+Still not as smooth as Vercel's deploy preview. But I understand what's happening now.
+
+## Monitoring
+
+Server could be down and I wouldn't know. Set up uptime monitoring with a free tier from UptimeRobot. Pings every 5 minutes, emails me if it's down.
+
+For server metrics, I use htop when I SSH in. Nothing fancy. I know there are better options but this works for now.
+
+## What I'd Do Differently
+
+- Start with more RAM
+- Use Docker from the beginning (easier to move servers later)
+- Set up proper backups before going live
+- Use a managed database instead of running MongoDB myself
+
+The managed database point is big. I've had to restore from backup twice. Not fun at 2 AM.
+
+## Was It Worth It?
+
+Honestly? Mixed feelings.
+
+I learned a ton. I understand deployment now. When something breaks, I can actually debug it instead of just clicking buttons and hoping.
+
+But for most projects, managed platforms are the right call. Less to maintain. More time for actual coding.
+
+I'd still recommend doing this once though. The knowledge transfers everywhere.
