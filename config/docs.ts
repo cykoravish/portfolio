@@ -34,6 +34,11 @@ export const docsConfig = {
           items: [],
         },
         {
+          title: 'Blogs',
+          href: '/blog',
+          items: [],
+        },
+        {
           title: 'Experience',
           href: '/experience',
           items: [],
