@@ -1,54 +1,22 @@
-export const dynamic = "auto";
+export const dynamic = 'auto';
 
-import { siteConfig } from "@/config/site";
-import Link from "next/link";
-
-// marking this as async for now
-// maybe we can make this component dynamic with revalidate time in the future
 export async function SiteFooter() {
-  const currentYear = new Date().getFullYear();
+  const year = new Date().getFullYear();
   return (
-    <footer className="py-2 border-t border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container-wrapper">
-        <div className="container flex flex-col items-center justify-center py-4 space-y-2">
-          <div className="max-w-3xl text-xs leading-relaxed text-center sm:text-sm text-balance text-muted-foreground">
-            <span className="block sm:inline">© 2023 - {currentYear}</span>
-            <span className="hidden sm:inline"> · </span>
-            <span className="block sm:inline">
-              Built with{" "}
-              <span className="font-medium text-foreground">Next.js</span>,{" "}
-              <span className="font-medium text-foreground">shadcn/ui</span> and{" "}
-              <span className="font-medium text-foreground">Tailwind CSS</span>
-            </span>
-            <span className="hidden sm:inline"> · </span>
-            <span className="block sm:inline">
-              Coded in{" "}
-              <span className="font-medium text-foreground">Cursor</span> and
-              deployed in{" "}
-              <span className="font-medium text-foreground">VPS</span>
-            </span>
-          </div>
-          <div className="text-xs text-center sm:text-sm text-muted-foreground">
-            Developed by{" "}
-            <Link
-              href={siteConfig.links.githubProfile}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium transition-colors text-primary hover:text-primary/80"
-            >
-              Ravish Bisht
-            </Link>{" "}
-            · Source code available on{" "}
-            <Link
-              href={siteConfig.links.github}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium transition-colors text-primary hover:text-primary/80"
-            >
-              GitHub
-            </Link>
-          </div>
-        </div>
+    <footer className="border-t bg-background">
+      <div className="container mx-auto px-4 py-6 flex flex-col gap-2 text-center sm:flex-row sm:justify-between sm:text-left">
+        <p className="text-xs sm:text-sm text-muted-foreground">
+          © {year}{' '}
+          <span className="font-medium text-foreground">Ravish Bisht</span> ·
+          Full-Stack Developer
+        </p>
+
+        <a
+          href="mailto:cykoravish@gmail.com"
+          className="text-xs sm:text-sm font-medium text-primary hover:underline"
+        >
+          Let’s work together →
+        </a>
       </div>
     </footer>
   );
