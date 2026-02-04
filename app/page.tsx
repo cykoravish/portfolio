@@ -19,18 +19,19 @@ const IntroductionPage = async () => {
           Full-Stack Web Developer | DevOps | AI Integration
         </PageHeaderHeading>
         <PageHeaderDescription>
-          I am a results-driven Full-Stack Web Developer with strong expertise in
-          JavaScript and modern web technologies. I specialize in building
-          scalable, high-performance web applications using Next.js, React,
-          Node.js, Express, MongoDB, and Tailwind CSS.
+          I am a Full-Stack Web Developer with a strong focus on JavaScript and
+          modern web development. I work on building complete web applications
+          that are scalable, reliable, and easy to use.
           <br />
           <br />
-          Alongside full-stack development, I apply DevOps practices such as
-          Docker-based deployments, CI/CD pipelines, and cloud hosting to ensure
-          reliable and efficient delivery. I also actively explore AI
-          integrations to enhance application intelligence and user experience.
-          I focus on writing clean, maintainable code and delivering
-          production-ready solutions.
+          I primarily work with React, Next.js, Node.js, Express, MongoDB, and
+          Tailwind CSS. Along with development, I follow DevOps practices such
+          as Docker-based deployments, CI/CD pipelines, and cloud hosting to
+          ensure smooth and stable releases.
+          <br />
+          <br />I also explore AI integrations to improve application features
+          and user experience. My focus is on writing clean code, solving real
+          problems, and delivering production-ready solutions.
         </PageHeaderDescription>
         <PageActions>
           <Button asChild size="sm" className="rounded-md">

@@ -15,7 +15,7 @@ const ProjectsPage = () => {
       <PageHeader className="mb-10">
         <PageHeaderHeading>Projects</PageHeaderHeading>
         <PageHeaderHeading className="mt-2 text-muted-foreground">
-          A lot of ideas, but some are still under construction!
+          Real-world projects focused on solving practical problems
         </PageHeaderHeading>
       </PageHeader>
 
@@ -34,8 +34,7 @@ const ProjectsPage = () => {
                   href={`/projects/${project.slug}`}
                   className="text-muted-foreground "
                 >
-                  Learn More...
-                  <span className="absolute inset-0"></span>
+                  View project →<span className="absolute inset-0"></span>
                 </Link>
               </CardDescription>
             </CardHeader>

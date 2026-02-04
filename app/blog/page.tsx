@@ -1,12 +1,12 @@
-import { getAllBlogs } from "@/lib/getBlogs";
-import { BlogCard } from "@/components/BlogCard";
-import Link from "next/link";
-import { ArrowLeft, Newspaper } from "lucide-react";
+import { getAllBlogs } from '@/lib/getBlogs';
+import { BlogCard } from '@/components/BlogCard';
+import Link from 'next/link';
+import { ArrowLeft, Newspaper } from 'lucide-react';
 
 export const metadata = {
-  title: "Blog | Dev Stories & Lessons",
+  title: 'Blog | Dev Stories & Lessons',
   description:
-    "Honest stories and lessons from building MERN stack applications. No tutorials, just real experience.",
+    'Honest stories and lessons from building MERN stack applications. No tutorials, just real experience.',
 };
 
 export default function BlogPage() {
@@ -17,7 +17,7 @@ export default function BlogPage() {
     <main className="min-h-screen bg-background">
       {/* Subtle gradient background */}
       <div className="fixed inset-0 bg-gradient-to-b from-secondary/20 via-background to-background pointer-events-none" />
-      
+
       <div className="relative max-w-6xl mx-auto">
         {/* Navigation */}
         <Link
@@ -38,13 +38,14 @@ export default function BlogPage() {
               {posts.length} articles
             </span>
           </div>
-          
+
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-4 tracking-tight">
             Blog
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-2xl">
-            Real stories from building apps. What worked, what failed, and what I
-            learned along the way.
+            Real stories from building web applications in a startup
+            environment. What worked, what failed, and what I learned while
+            building real products.
           </p>
         </header>
 
@@ -61,7 +62,7 @@ export default function BlogPage() {
             <h2 className="text-lg font-semibold text-foreground">All Posts</h2>
             <div className="flex-1 h-px bg-border" />
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             {remainingPosts.map((post) => (
               <BlogCard key={post.slug} post={post} />
@@ -72,7 +73,7 @@ export default function BlogPage() {
         {/* Footer decoration */}
         <div className="mt-20 pt-8 border-t border-border">
           <p className="text-center text-sm text-muted-foreground">
-            More posts coming soon. Follow along as I continue building.
+            More posts coming soon as I continue learning and building real products.
           </p>
         </div>
       </div>
