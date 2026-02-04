@@ -6,96 +6,147 @@ tags: ["Environment", "Security", "MERN"]
 readingTime: "6 min read"
 ---
 
-I pushed my database password to GitHub. The commit sat there for two hours before I noticed.
+I pushed my database password to a public GitHub repository. The commit stayed there for two hours before I noticed.
 
-Then I did it again three months later.
+You'd think I'd learn from that, right? Three months later, I did it again with an API key.
 
-Yeah. Let's talk about environment variables.
+So yeah, let's talk about environment variables and how not to be like me.
 
-## The Problem With .env Files
+## The .env File Trap
 
-Everyone uses .env files. They're convenient. You put your secrets there, add .env to .gitignore, and you're safe.
+Everybody uses `.env` files. They're the standard way to handle config and secrets. You create the file, add it to `.gitignore`, and you're protected.
 
-Except .gitignore doesn't help if you already committed the file. Git remembers. Even if you delete it, it's in the history.
+Except that's not how it works if you mess up the order.
 
-I had to rotate every credential in that repo. Painful lesson.
+I created my `.env` file first, added my database credentials, maybe committed a few times while testing. Then later I thought "oh right, I should gitignore this" and added `.env` to my `.gitignore` file.
 
-## The gitignore Order Matters
+Too late. Git already tracked it. The file was in my commit history. Even though it wasn't showing up in `git status` anymore, anyone could look at my old commits and see every secret I'd ever put in there.
 
-Add .env to .gitignore before creating the file. Not after. The moment you create a file, git can track it. If you gitignore it later, git might already have staged it.
+Had to rotate my database password, regenerate API keys, update every service that depended on those credentials. Spent half a day cleaning up a mistake that took 30 seconds to make.
 
-I now add .env to .gitignore in my very first commit. Before anything else.
+## Do This Instead
 
-## Client vs Server
+Now I add `.env` to `.gitignore` in my very first commit, before I even create the actual `.env` file. Literally the first thing I do when starting a new project.
+```
+# First commit
+echo ".env" >> .gitignore
+git add .gitignore
+git commit -m "Initial commit"
 
-React apps bundle everything into JavaScript that runs in the browser. If you put a secret in your React code, users can see it. Doesn't matter if it's in an env var.
-
-Only put public stuff in REACT_APP or NEXT_PUBLIC env vars. API keys for services that require authentication should stay on the server.
-
-I once put a Stripe secret key in my React app. Luckily it was test mode. But still. Could have been bad.
-
-## Validation at Startup
-
-For a while, my app would start fine but crash later when it tried to use a missing env var. Confusing errors deep in some function.
-
-Now I validate env vars at startup:
-
-```javascript
-const required = ['DATABASE_URL', 'JWT_SECRET', 'REDIS_URL']
-for (const name of required) {
-  if (!process.env[name]) {
-    console.error(`Missing required env var: ${name}`)
-    process.exit(1)
-  }
-}
+# Then create .env
+touch .env
 ```
 
-Fail fast. Know immediately if something's wrong.
+Can't accidentally commit what's already ignored.
 
-## Different Environments
+## Client-Side Code Is Public
 
-I used to have one .env file and manually change values for development vs production. Error-prone and annoying.
+This one got me with a Stripe API key.
 
-Now I have:
-- .env.development for local
-- .env.production for prod
-- .env.example committed to git showing what vars are needed
+React builds your code into JavaScript bundles that run in the browser. Anything in your React code, including environment variables, ends up in those bundles. Users can open dev tools and see everything.
 
-Some frameworks load these automatically based on NODE_ENV. Worth checking if yours does.
+I was using `REACT_APP_STRIPE_SECRET_KEY` in my frontend to process payments. Seemed fine because it was in an environment variable, not hardcoded.
 
-## Secrets in Docker
+Except the environment variable got bundled into the JavaScript. Anyone could open the Network tab, look at the bundle, and find my Stripe secret key sitting right there in plain text.
 
-Docker adds complexity. You can pass env vars when running containers, use docker-compose environment section, or use Docker secrets.
+Thankfully I caught it before going live, and it was a test mode key anyway. But if that had been production? Anyone could've made charges using my account.
 
-For development, docker-compose with an env_file works:
+**Rule:** Only put public/publishable keys in your frontend environment variables (`REACT_APP_*`, `NEXT_PUBLIC_*`, etc.). Anything secret stays on the backend. Use your server as a proxy for API calls that need authentication.
 
+## Apps That Crash Later Are Annoying
+
+For a while, my app would start up fine, get through initialization, maybe even serve a few requests. Then suddenly crash 10 minutes later when some code path tried to use an environment variable that didn't exist.
+
+The error would be buried deep in a function somewhere, and it would take forever to track down which env var was missing.
+
+Now I validate everything upfront:
+```javascript
+const required = ['DATABASE_URL', 'JWT_SECRET', 'REDIS_URL'];
+
+for (const name of required) {
+  if (!process.env[name]) {
+    console.error(`Missing required environment variable: ${name}`);
+    process.exit(1);
+  }
+}
+
+console.log('All required environment variables are set');
+```
+
+If something's missing, the app fails immediately at startup with a clear message. Don't waste time debugging only to find out you forgot to set `REDIS_URL`.
+
+## Multiple Environments Are Messy
+
+Initially I had one `.env` file and would manually edit it when switching between development and production. Change the database URL, update the API keys, hope I didn't forget anything.
+
+Predictably, I'd forget something. Or I'd commit with production values still in there. Or I'd push code that worked locally but used the wrong config in production.
+
+Now I use separate files:
+
+- `.env.development` - local development settings
+- `.env.production` - production config (not committed, obviously)
+- `.env.example` - committed to git, shows what variables are needed
+
+Some frameworks like Next.js automatically load the right file based on `NODE_ENV`. If yours doesn't, you can use `dotenv` with a bit of custom logic:
+```javascript
+const envFile = process.env.NODE_ENV === 'production' 
+  ? '.env.production' 
+  : '.env.development';
+
+require('dotenv').config({ path: envFile });
+```
+
+Way less error-prone than manually swapping values.
+
+## Docker Complicates Things
+
+When you containerize your app, environment variables get tricky. You can pass them when running the container, define them in `docker-compose.yml`, use an env file, or use Docker secrets.
+
+For development with Docker Compose, I use the `env_file` option:
 ```yaml
 services:
   api:
+    build: ./server
     env_file:
       - .env
 ```
 
-For production, I use the hosting platform's secret management. Vercel, Railway, whatever. They encrypt secrets and inject them at runtime.
+This loads variables from `.env` at runtime, not at build time. Important distinction. You don't want secrets baked into your image.
 
-## The .env.example Trick
+For production, I don't use `.env` files at all. Whatever platform I'm deploying to (Vercel, Railway, AWS, whatever) has its own secret management. I configure environment variables through their dashboard or CLI, and they handle encryption and injection at runtime.
 
-I keep a .env.example file with all required variables but fake values:
+Never hardcode production secrets anywhere in your codebase or Dockerfiles.
 
+## The .env.example File
+
+This is something I should've done from day one but didn't think of until someone else's repo showed me.
+
+Keep a `.env.example` file in your repository with all the required variables but fake/placeholder values:
 ```
 DATABASE_URL=mongodb://localhost:27017/myapp
-JWT_SECRET=your-secret-here
-STRIPE_KEY=sk_test_xxx
+JWT_SECRET=your-secret-here-replace-me
+STRIPE_PUBLISHABLE_KEY=pk_test_xxx
+STRIPE_SECRET_KEY=sk_test_xxx
+REDIS_URL=redis://localhost:6379
 ```
 
-New developers know exactly what they need to set up. No guessing.
+Now when someone clones your project, they know exactly what environment variables they need. They copy `.env.example` to `.env` and fill in real values.
 
-## Current Setup
+No more messages like "hey the app crashes on startup, what env vars do I need?"
 
-- .env files for local dev, never committed
-- .env.example committed with dummy values
-- Validation at app startup
-- Production secrets in hosting platform
-- No secrets in client-side code ever
+## What I Do Now
 
-It took me embarrassingly long to get here. But I haven't leaked credentials in over a year now. Progress.
+My current setup:
+
+- `.env` files for local development, never committed to version control
+- `.env.example` committed with dummy values so new developers know what to set
+- Startup validation that crashes immediately if required variables are missing
+- Production secrets managed through hosting platform (Vercel secrets, Railway variables, etc.)
+- Absolutely nothing secret in client-side code, ever
+- Separate env files for development and production to avoid manual swapping
+
+It's not perfect. I'm sure there are edge cases I haven't thought of. But I haven't accidentally leaked credentials in over a year, which feels like an achievement.
+
+If you're reading this because you just pushed secrets to GitHub, don't feel too bad. I did it twice. Just rotate your credentials, remove the sensitive files from git history (look up `git filter-branch` or BFG Repo-Cleaner), and set up your environment variables properly going forward.
+
+We all learn this stuff the hard way. At least you're learning.
