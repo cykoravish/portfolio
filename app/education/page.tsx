@@ -13,19 +13,22 @@ const EducationPage = () => {
       <PageHeader className="mb-10">
         <PageHeaderHeading>Education</PageHeaderHeading>
         <PageHeaderHeading className="mt-2 text-muted-foreground">
-          I learned a lot, but the real learning happens in the code editor!
+          Building a foundation through formal education and self-learning
         </PageHeaderHeading>
         <PageHeaderDescription>
-          Education has always been the cornerstone of my journey into the tech
-          world. Pursuing a Bachelor's in Computer Application (BCA) at GH Raisoni
-          College of Engineering and Management, Nagpur, has provided me a
-          strong foundation in computer science and software development.
+          My academic background is non-technical, which helped me build strong
+          discipline, communication skills, and the ability to learn
+          independently. Alongside my formal education, I actively focused on
+          learning programming and computer science fundamentals through
+          self-study and practical work.
         </PageHeaderDescription>
 
         <PageHeaderDescription>
-          My academic journey has been complemented by hands-on projects and
-          coursework, enabling me to build practical skills and a deep
-          understanding of modern technological solutions.
+          I completed my Bachelor of Arts from Indira Gandhi National Open
+          University and later strengthened my technical foundation through a
+          certification in Information Technology, where I learned core concepts
+          of computer science and programming. Most of my practical learning
+          came from building real projects and working in a startup environment.
         </PageHeaderDescription>
       </PageHeader>
 

@@ -2,19 +2,14 @@ import { TimelineViewerData } from '@/types/TimelineViewer.types';
 
 export const experiences: TimelineViewerData[] = [
   {
-    title: 'Open Source Developer · Hacktoberfest',
-    date: 'Oct. 2025 - Present',
-    description: `Currently contributing as an Open Source Developer at Hacktoberfest, working on various web development projects and collaborating with the global developer community.`,
+    title: 'Full Stack Web Developer · Novanectar Services Pvt. Ltd.',
+    date: 'Dec 2024 – Present',
+    description: `Working as a Full Stack Web Developer, building and maintaining production-level web applications. I work with React.js and Next.js on the frontend, and Node.js with Express.js on the backend. My responsibilities include designing RESTful APIs, implementing authentication and authorization flows, working with MongoDB and PostgreSQL, and deploying applications on VPS using Nginx. I also collaborate closely with the team to deliver scalable, performance-focused features.`,
     latest: true,
   },
   {
-    title: 'Trainee · Sheriyans Coding School',
-    date: 'May 2025 - Oct. 2025',
-    description: `Trainee at Sheriyans Coding School, learned full-stack technologies and DevOps practices. Participated in hackathons and collaborated on projects with the developer community.`,
-  },
-  {
-    title: 'Project Admin · GSSoC25 (GirlScript Summer of Code)',
-    date: 'Aug. 2025 - Sept. 2025',
-    description: `As a Project Admin, I reviewed code, merged pull requests, and communicated with developers, ensuring smooth project workflow and collaboration during GSSoC25.`,
+    title: 'Web Developer Intern · Kirabiz Technologies',
+    date: 'May 2024 – July 2024',
+    description: `Worked as a Web Developer Intern on full-stack development tasks. I designed backend systems using Node.js, Express.js, and MongoDB with proper error handling. I also implemented real-time collaboration features using WebSockets and supported the team in building and improving application features in a remote work environment.`,
   },
 ];

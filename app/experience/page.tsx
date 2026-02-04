@@ -13,16 +13,28 @@ const ExperiencePage = () => {
       <PageHeader className="mb-10">
         <PageHeaderHeading>Experience</PageHeaderHeading>
         <PageHeaderHeading className="mt-2 text-muted-foreground">
-          You need it to get the job, but the job’s what gives it!
+          Learning by building, shipping, and improving real products
         </PageHeaderHeading>
         <PageHeaderDescription>
-          Throughout my journey as a developer, I have had the opportunity to
-          work with cutting-edge technologies while also mastering the fine art
-          of debugging at 2 AM. From building dynamic web applications to
-          deciphering cryptic error messages, my experience has been a mix of
-          structured learning and spontaneous problem-solving. Each project and
-          internship has sharpened my ability to write clean code, collaborate
-          effectively, and most importantly—fix bugs before they fix me.
+          My experience as a developer comes from working on real-world projects
+          in a startup environment and continuously learning through hands-on
+          development. I started as a self-taught developer and gradually moved
+          into building production applications used by real users.
+        </PageHeaderDescription>
+
+        <PageHeaderDescription>
+          In my current role, I work on full-stack web applications where I
+          handle frontend features, backend logic, database design, and
+          deployments. I have experience working in a team, taking ownership of
+          tasks, reviewing code, and improving existing systems for better
+          performance and scalability.
+        </PageHeaderDescription>
+
+        <PageHeaderDescription>
+          Over time, I have also taken responsibility for deploying applications
+          on VPS servers using Docker and CI/CD pipelines. This has helped me
+          understand the complete development lifecycle — from writing code to
+          running it reliably in production.
         </PageHeaderDescription>
       </PageHeader>
 

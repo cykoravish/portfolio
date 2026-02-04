@@ -2,19 +2,15 @@ import { TimelineViewerData } from '@/types/TimelineViewer.types';
 
 export const education: TimelineViewerData[] = [
   {
-    title:
-      'Bachelor in Computer Application · GH Raisoni College of Engineering and Management · Nagpur, India',
-    date: 'Aug. 2023 - June 2026 (Expected)',
-    description: `I am pursuing a Bachelor's in Computer Application at GH Raisoni College of Engineering and Management, specializing in programming, web development, and software engineering.`,
+    title: 'Bachelor of Arts (BA)',
+    date: '2020 – 2023',
+    description:
+      'Completed Bachelor of Arts from Indira Gandhi National Open University, Dehradun. This program helped me develop strong self-learning habits, communication skills, and a disciplined approach to long-term goals.',
   },
   {
-    title: 'Higher Secondary Education · NPW Science College · Lakhani',
-    date: 'July 2021 - May 2023',
-    description: `I completed my 12th in Information Technology from NPW Science College, Lakhani, Maharashtra.`,
-  },
-  {
-    title: 'Secondary Education · Shivaji Vidyalaya Seloti/Manegaon · SEE',
-    date: 'Apr. 2012 - Mar. 2021',
-    description: `I completed my foundational education up to SEE at Shivaji Vidyalaya, Seloti/Manegaon.`,
+    title: 'Certification in Information Technology',
+    date: '2023 – 2024',
+    description:
+      'Completed a certification focused on computer science fundamentals and programming basics, which helped me transition into web development and software engineering.',
   },
 ];
