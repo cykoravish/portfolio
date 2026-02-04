@@ -6,9 +6,7 @@ import View from '@/model/views.model';
 export async function getViewsServerAction() {
   try {
     await connectToDatabase();
-
     const viewDoc = await View.findOne({});
-
     return {
       success: true,
       message: viewDoc?.views ?? 0,

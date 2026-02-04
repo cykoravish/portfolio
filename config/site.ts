@@ -1,5 +1,5 @@
 export const siteConfig = {
-  name: 'cykoravish',
+  name: 'Ravish',
   url: 'https://cykoravish.cloud',
   description:
     'Portfolio of Ravish Bisht, Full-Stack Web Developer & DevOps enthusiast with AI.',

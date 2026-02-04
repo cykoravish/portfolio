@@ -1,21 +1,21 @@
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
-} from "@/components/page-header";
-import { getViewsServerAction } from "../actions/getAndSetViewsServerAction";
-import { getLoveCountServerAction } from "../actions/getAndSetLoveCountServerAction";
-import LoveButtonComponent from "./LoveButtonComponent";
-import { getGitHubStatsServerAction } from "../actions/getGitHubStatsServerAction";
-import GitHubGraphs from "./GitHubGraphs";
-import Pager from "@/components/pager";
+} from '@/components/page-header';
+import { getViewsServerAction } from '../actions/getAndSetViewsServerAction';
+import { getLoveCountServerAction } from '../actions/getAndSetLoveCountServerAction';
+import LoveButtonComponent from './LoveButtonComponent';
+import { getGitHubStatsServerAction } from '../actions/getGitHubStatsServerAction';
+import GitHubGraphs from './GitHubGraphs';
+import Pager from '@/components/pager';
 
 const StatCard = ({
   title,
   value,
-  className = "",
+  className = '',
 }: {
   title: string;
   value: string | number;
@@ -42,28 +42,28 @@ const Stats = async () => {
 
   const githubStatCards = [
     {
-      title: "Hireable",
-      value: githubStats.hireable && "Yes",
-      className: githubStats.hireable && "bg-green-500/20",
+      title: 'Hireable',
+      value: githubStats.hireable && 'Yes',
+      className: githubStats.hireable && 'bg-green-500/20',
     },
     {
-      title: "Total Public Repositories",
+      title: 'Total Public Repositories',
       value: githubStats.public_repos,
     },
     {
-      title: "Followers",
+      title: 'Followers',
       value: githubStats.followers,
     },
     {
-      title: "Following",
+      title: 'Following',
       value: githubStats.following,
     },
+    // {
+    //   title: 'Current Company',
+    //   value: githubStats.company,
+    // },
     {
-      title: "Current Company",
-      value: githubStats.company,
-    },
-    {
-      title: "Location",
+      title: 'Location',
       value: githubStats.location,
     },
   ];
@@ -74,7 +74,7 @@ const Stats = async () => {
       <PageHeader>
         <PageHeaderHeading>About this portfolio</PageHeaderHeading>
         <PageHeaderDescription>
-          Insights and metrics about this portfolio website
+          Live metrics collected from this portfolio application
         </PageHeaderDescription>
       </PageHeader>
 
@@ -139,7 +139,7 @@ const Stats = async () => {
               >
                 <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
               </svg>
-              &nbsp;Appreciation Count
+              &nbsp;Likes from Visitors
             </h3>
             <div className="h-[1px] w-full bg-muted/60"></div>
           </div>
@@ -168,7 +168,7 @@ const Stats = async () => {
       <PageHeader className="mt-8 mb-4">
         <PageHeaderHeading>GitHub Stats</PageHeaderHeading>
         <PageHeaderDescription>
-          Insights and metrics about my GitHub profile
+          Public activity and profile details from my GitHub account
         </PageHeaderDescription>
       </PageHeader>
 
@@ -183,7 +183,7 @@ const Stats = async () => {
             <StatCard
               key={index}
               title={card.title}
-              value={card.value || "Limit Reached"}
+              value={card.value || 'Limit Reached'}
               className={card.className}
             />
           ))}
