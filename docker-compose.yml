@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  web:
+    image: cykoravish-portfolio
+    container_name: cykoravish-portfolio
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
