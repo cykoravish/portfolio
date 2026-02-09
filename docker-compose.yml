@@ -1,5 +1,6 @@
 services:
   web:
+    build: .
     image: cykoravish-portfolio
     container_name: cykoravish-portfolio
     restart: unless-stopped
