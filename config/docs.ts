@@ -33,11 +33,7 @@ export const docsConfig = {
           href: '/skills-tools',
           items: [],
         },
-        {
-          title: 'Blogs',
-          href: '/blog',
-          items: [],
-        },
+
         {
           title: 'Experience',
           href: '/experience',
@@ -46,6 +42,11 @@ export const docsConfig = {
         {
           title: 'Education',
           href: '/education',
+          items: [],
+        },
+        {
+          title: 'Blogs',
+          href: '/blog',
           items: [],
         },
         // {

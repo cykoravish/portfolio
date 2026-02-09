@@ -17,9 +17,9 @@ const ContactPage = async () => {
       </div>
 
       <Pager
-        prevHref="/education"
+        prevHref="/blog"
         nextHref="/stats"
-        prevTitle="Education"
+        prevTitle="Blogs"
         nextTitle="Stats"
       />
     </>

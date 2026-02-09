@@ -2,6 +2,7 @@ import { getAllBlogs } from '@/lib/getBlogs';
 import { BlogCard } from '@/components/BlogCard';
 import Link from 'next/link';
 import { ArrowLeft, Newspaper } from 'lucide-react';
+import Pager from '@/components/pager';
 
 export const metadata = {
   title: 'Blog | Dev Stories & Lessons',
@@ -70,6 +71,13 @@ export default function BlogPage() {
           </div>
         </section>
 
+      <Pager
+        prevHref="/education"
+        nextHref="/contact"
+        prevTitle="Education"
+        nextTitle="Contact"
+      />
+
         {/* Footer decoration */}
         <div className="mt-20 pt-8 border-t border-border">
           <p className="text-center text-sm text-muted-foreground">
@@ -77,6 +85,8 @@ export default function BlogPage() {
           </p>
         </div>
       </div>
+
+
     </main>
   );
 }
