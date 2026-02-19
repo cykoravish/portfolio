@@ -29,6 +29,11 @@ export const docsConfig = {
           items: [],
         },
         {
+          title: 'Services',
+          href: '/services',
+          items: [],
+        },
+        {
           title: 'Skills & Tools',
           href: '/skills-tools',
           items: [],

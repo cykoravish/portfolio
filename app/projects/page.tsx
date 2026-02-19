@@ -44,9 +44,9 @@ const ProjectsPage = () => {
 
       <Pager
         prevHref="/about"
-        nextHref="/skills-tools"
+        nextHref="/services"
         prevTitle="About"
-        nextTitle="Skills & Tools"
+        nextTitle="Services"
       />
     </>
   );
