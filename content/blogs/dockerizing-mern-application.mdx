@@ -8,7 +8,7 @@ readingTime: "8 min read"
 
 Everyone talks about Docker like it's this magical solution that makes deployment easy. "Just containerize your app," they said. "It'll work the same everywhere," they said.
 
-So I figured, how hard could it be? Write a Dockerfile, run a couple commands, done.
+So I figured, how hard could it be to containerize my [MERN application](/projects)? Write a Dockerfile, run a couple commands, done.
 
 Took me three full days to get it working. And even then, I wasn't totally sure why it worked.
 
@@ -75,6 +75,8 @@ Changed `localhost` to `mongo` and everything connected instantly. Would've save
 ## The Image Size Problem
 
 Even after fixing the build process, my images were still massive. The Node app image was over 2GB. For an app that's maybe 50MB of actual code.
+
+Since most of my stack runs on [Node.js and MongoDB](/skills-tools), I assumed Docker would be straightforward.
 
 I was using the default `node:20` base image, which includes a ton of stuff I didn't need. Build tools, Python, git, the whole kitchen sink.
 
@@ -149,7 +151,7 @@ services:
 
 This loads environment variables at runtime, not build time. Much better.
 
-For production, I don't use `.env` files at all. I pass environment variables directly through my CI/CD pipeline or server configuration. Keeps secrets out of version control.
+For production, I pass environment variables directly through my [DevOps deployment workflow](/services) or server configuration.
 
 ## What Finally Made It Click
 
@@ -166,6 +168,8 @@ Also, I started actually reading error messages instead of immediately googling 
 I don't know everything about Docker. I still google basic commands. I've never touched Kubernetes and honestly it still intimidates me.
 
 But my deployments are consistent now. I can spin up the entire app with one command. It works exactly the same on my laptop, our staging server, and production.
+
+I also wrote about deploying without containers in my guide on [deploying MERN on a VPS](/blog/deploying-mern-on-vps).
 
 That's what I wanted from Docker. It took three frustrating days to get there, but I finally understand what everyone was talking about.
 
