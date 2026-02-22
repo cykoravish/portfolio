@@ -4,9 +4,10 @@ import { projects } from '@/constants/projects';
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const project = projects.find((p) => p.slug === params.id);
+  const { id } = await params;
+  const project = projects.find((p) => p.slug === id);
 
   if (!project) {
     return {
