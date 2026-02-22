@@ -1,13 +1,31 @@
+import type { Metadata } from 'next';
 import { getAllBlogs } from '@/lib/getBlogs';
 import { BlogCard } from '@/components/BlogCard';
 import Link from 'next/link';
 import { ArrowLeft, Newspaper } from 'lucide-react';
 import Pager from '@/components/pager';
 
-export const metadata = {
-  title: 'Blog | Dev Stories & Lessons',
+export const metadata: Metadata = {
+  title: 'Development Blog – MERN, Next.js & DevOps Articles',
   description:
-    'Honest stories and lessons from building MERN stack applications. No tutorials, just real experience.',
+    'Technical articles on MERN stack, Next.js, DevOps, Docker, CI/CD, and real-world web development lessons by Ravish Bisht.',
+  alternates: {
+    canonical: 'https://cykoravish.cloud/blog',
+  },
+  openGraph: {
+    title: 'Development Blog – MERN, Next.js & DevOps Articles',
+    description:
+      'Real-world lessons from building MERN stack and Next.js applications.',
+    url: 'https://cykoravish.cloud/blog',
+    type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
 };
 
 export default function BlogPage() {
@@ -41,12 +59,12 @@ export default function BlogPage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-4 tracking-tight">
-            Blog
+            Development Blog – MERN, Next.js & DevOps
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-2xl">
-            Real stories from building web applications in a startup
-            environment. What worked, what failed, and what I learned while
-            building real products.
+            Technical insights, lessons, and real-world experiences building
+            full-stack applications using Next.js, MERN stack, Docker, CI/CD
+            pipelines, and AI integrations.
           </p>
         </header>
 
@@ -71,22 +89,21 @@ export default function BlogPage() {
           </div>
         </section>
 
-      <Pager
-        prevHref="/education"
-        nextHref="/contact"
-        prevTitle="Education"
-        nextTitle="Contact"
-      />
+        <Pager
+          prevHref="/education"
+          nextHref="/contact"
+          prevTitle="Education"
+          nextTitle="Contact"
+        />
 
         {/* Footer decoration */}
         <div className="mt-20 pt-8 border-t border-border">
           <p className="text-center text-sm text-muted-foreground">
-            More posts coming soon as I continue learning and building real products.
+            More posts coming soon as I continue learning and building real
+            products.
           </p>
         </div>
       </div>
-
-
     </main>
   );
 }
