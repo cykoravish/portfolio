@@ -6,21 +6,21 @@ tags: ["AI", "Production", "Lessons"]
 readingTime: "8 min read"
 ---
 
-I've had AI features in production for about six months now. Long enough to learn what works and what doesn't.
+I've had AI features in production for about six months now, after initially integrating GPT into my app as I described in my post on [adding AI to my MERN app](/blog/integrating-ai-into-mern-app).
 
 This isn't about integration. It's about what happens after.
 
 ## Latency Is a Problem
 
-AI APIs are slow compared to normal database queries. 2-3 seconds is common. Sometimes longer.
+AI APIs are slow compared to normal database queries in a typical [Node.js + MongoDB stack](/skills-tools). 2-3 seconds is common. Sometimes longer.
 
-Users notice. Some assumed the app was broken.
+Users notice. Some assumed the app was broken, especially inside one of my larger [MERN projects](/projects).
 
 Solutions that helped:
 - Show a loading state immediately
 - Use streaming for long responses
 - Process in background and notify when done
-- Cache aggressively
+- Cache aggressively — something I also learned while improving my [Node.js API performance](/blog/improving-nodejs-api-performance).
 
 The UX work around AI is as important as the AI itself.
 
@@ -83,7 +83,7 @@ Most users are fine. But a few will test every boundary.
 
 ## Logging Is Essential
 
-I log every AI interaction. Input, output, latency, cost, errors.
+I log every AI interaction. Input, output, latency, cost, errors. And of course, API keys and model configs are handled through proper environment variables — something I learned the hard way in my guide on [handling environment variables in MERN](/blog/handling-env-vars-in-mern).
 
 This helps with:
 - Debugging weird responses
