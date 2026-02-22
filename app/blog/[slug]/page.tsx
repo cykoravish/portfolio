@@ -1,9 +1,9 @@
-import { notFound } from "next/navigation";
-import { getAllSlugs, getBlogBySlug } from "@/lib/getBlogs";
-import { BlogContent } from "@/components/BlogContent";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import type { Metadata } from "next";
+import { notFound } from 'next/navigation';
+import { getAllSlugs, getBlogBySlug } from '@/lib/getBlogs';
+import { BlogContent } from '@/components/BlogContent';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
+import type { Metadata } from 'next';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -14,25 +14,44 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = getBlogBySlug(slug);
 
   if (!post) {
     return {
-      title: "Post Not Found",
+      title: 'Post Not Found',
     };
   }
 
   return {
     title: `${post.title} | Dev Blog`,
     description: post.description,
+    alternates: {
+      canonical: `https://cykoravish.cloud/blog/${post.slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.description,
-      type: "article",
+      type: 'article',
+      url: `https://cykoravish.cloud/blog/${post.slug}`,
       publishedTime: post.date,
       tags: post.tags,
+      images: [
+        {
+          url: '/og-image.png',
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description,
+      images: ['/og-image.png'],
     },
   };
 }
@@ -58,6 +77,30 @@ export default async function BlogPostPage({ params }: PageProps) {
 
         <BlogContent post={post} />
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: post.title,
+            description: post.description,
+            datePublished: post.date,
+            author: {
+              '@type': 'Person',
+              name: 'Ravish Bisht',
+            },
+            publisher: {
+              '@type': 'Person',
+              name: 'Ravish Bisht',
+            },
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': `https://cykoravish.cloud/blog/${slug}`,
+            },
+          }),
+        }}
+      />
     </main>
   );
 }
