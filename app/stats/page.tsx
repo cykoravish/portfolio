@@ -1,5 +1,7 @@
 export const dynamic = 'force-dynamic';
 
+import type { Metadata } from 'next';
+
 import {
   PageHeader,
   PageHeaderDescription,
@@ -11,6 +13,19 @@ import LoveButtonComponent from './LoveButtonComponent';
 import { getGitHubStatsServerAction } from '../actions/getGitHubStatsServerAction';
 import GitHubGraphs from './GitHubGraphs';
 import Pager from '@/components/pager';
+
+export const metadata: Metadata = {
+  title: 'Portfolio Stats – GitHub Metrics & Site Analytics',
+  description:
+    'Live portfolio statistics including GitHub activity, public repositories, followers, and real-time site metrics of Ravish Bisht.',
+  alternates: {
+    canonical: 'https://cykoravish.cloud/stats',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 const StatCard = ({
   title,
@@ -195,6 +210,25 @@ const Stats = async () => {
         nextHref="/"
         prevTitle="Contact"
         nextTitle="Home"
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Person',
+            name: 'Ravish Bisht',
+            url: 'https://cykoravish.cloud',
+            sameAs: ['https://github.com/cykoravish'],
+            interactionStatistic: [
+              {
+                '@type': 'InteractionCounter',
+                interactionType: 'https://schema.org/FollowAction',
+                userInteractionCount: githubStats.followers,
+              },
+            ],
+          }),
+        }}
       />
     </>
   );
