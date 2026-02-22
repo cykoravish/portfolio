@@ -8,7 +8,7 @@ readingTime: "9 min read"
 
 Vercel is stupid easy. Push your code, get a URL, done. Same with Railway and Render. They handle everything for you.
 
-But I wanted to know what was actually happening under the hood. So I rented a VPS and decided to deploy my MERN app the old-fashioned way.
+But I wanted to know what was actually happening under the hood. So I rented a VPS and decided to deploy my [MERN application](/projects) the old-fashioned way.
 
 Took me three weeks to get everything working properly. I learned a lot. I also developed some strong opinions.
 
@@ -44,7 +44,7 @@ Kind of eye-opening. The internet is a hostile place.
 
 ## Installing All the Things
 
-Next step: get Node, MongoDB, Nginx, and PM2 installed. Each one has its own multi-step process.
+Next step: get [Node.js and MongoDB](/skills-tools), Nginx, and PM2 installed. Each one has its own multi-step process.
 
 MongoDB especially was annoying. You can't just `apt install mongodb`. You have to add their repository, import their GPG key, update your sources list, and *then* install. Six different commands just to get a database running.
 
@@ -107,7 +107,7 @@ At first, I deployed by SSHing into the server, running `git pull`, then `npm in
 
 It worked, but it was tedious. And I kept forgetting steps. Or I'd run the commands in the wrong order and something would break.
 
-Eventually I wrote a deploy script that GitHub Actions runs whenever I push to main. The workflow SSHs into the server and runs all the commands automatically. Tests pass, code deploys. No manual work.
+Eventually I wrote a deploy script that GitHub Actions runs whenever I push to main as part of my broader [DevOps deployment workflow](/services). The workflow SSHs into the server and runs all the commands automatically. I wrote more about that process in my guide on [setting up CI/CD for MERN with GitHub Actions](/blog/ci-cd-mern-github-actions). Tests pass, code deploys. No manual work.
 
 Still not as smooth as Vercel where you just get automatic preview deployments and rollbacks and all that. But at least I understand what's actually happening now.
 
