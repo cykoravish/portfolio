@@ -10,7 +10,7 @@ I pushed my database password to a public GitHub repository. The commit stayed t
 
 You'd think I'd learn from that, right? Three months later, I did it again with an API key.
 
-So yeah, let's talk about environment variables and how not to be like me.
+So yeah, let's talk about environment variables in a [MERN application](/projects) and how not to be like me.
 
 ## The .env File Trap
 
@@ -43,7 +43,7 @@ Can't accidentally commit what's already ignored.
 
 This one got me with a Stripe API key.
 
-React builds your code into JavaScript bundles that run in the browser. Anything in your React code, including environment variables, ends up in those bundles. Users can open dev tools and see everything.
+Since most of my frontend work is built with [React and Next.js](/skills-tools), I had to understand how environment variables behave during the build process.
 
 I was using `REACT_APP_STRIPE_SECRET_KEY` in my frontend to process payments. Seemed fine because it was in an environment variable, not hardcoded.
 
@@ -100,6 +100,8 @@ Way less error-prone than manually swapping values.
 
 ## Docker Complicates Things
 
+When I first started containerizing my app, I wrote about that chaos in my post on [Dockerizing my MERN app](/blog/dockerizing-mern-application).
+
 When you containerize your app, environment variables get tricky. You can pass them when running the container, define them in `docker-compose.yml`, use an env file, or use Docker secrets.
 
 For development with Docker Compose, I use the `env_file` option:
@@ -141,7 +143,7 @@ My current setup:
 - `.env` files for local development, never committed to version control
 - `.env.example` committed with dummy values so new developers know what to set
 - Startup validation that crashes immediately if required variables are missing
-- Production secrets managed through hosting platform (Vercel secrets, Railway variables, etc.)
+- Production secrets managed through hosting platforms as part of my broader [DevOps deployment workflow](/services).
 - Absolutely nothing secret in client-side code, ever
 - Separate env files for development and production to avoid manual swapping
 
