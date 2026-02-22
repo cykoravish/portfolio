@@ -16,31 +16,54 @@ import { setViewsServerAction } from './actions/getAndSetViewsServerAction';
 import { getLoveCountServerAction } from './actions/getAndSetLoveCountServerAction';
 
 export const metadata: Metadata = {
-  title: siteConfig.name,
-  description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
+
+  title: {
+    default: 'Ravish Bisht – Full Stack Developer | Next.js, MERN, DevOps & AI',
+    template: '%s | Ravish Bisht',
+  },
+
+  description:
+    'Ravish Bisht is a Full-Stack Developer specializing in Next.js, MERN Stack, DevOps, and AI integration. Explore projects, blog, and production-ready web solutions.',
+
   keywords: siteConfig.keywords,
+
   authors: [
     {
       name: 'Ravish Bisht',
-      url: 'https://cykoravish.cloud',
+      url: siteConfig.url,
     },
   ],
+
   creator: 'Ravish Bisht',
+
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: siteConfig.url,
-    title: siteConfig.name,
-    description: siteConfig.description,
-    siteName: siteConfig.name,
+    title: 'Ravish Bisht – Full Stack Developer | Next.js, MERN, DevOps & AI',
+    description:
+      'Portfolio of Ravish Bisht – Full-Stack Developer building scalable web applications with modern technologies.',
+    siteName: 'Ravish Bisht Portfolio',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Ravish Bisht – Full Stack Developer',
+      },
+    ],
   },
+
   twitter: {
     card: 'summary_large_image',
-    title: siteConfig.name,
-    description: siteConfig.description,
+    title: 'Ravish Bisht – Full Stack Developer',
+    description:
+      'Full-Stack Developer specializing in Next.js, MERN, DevOps & AI integration.',
     creator: '@ravish_bisht',
+    images: ['/og-image.png'],
   },
+
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.png',

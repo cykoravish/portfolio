@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import {
   PageActions,
   PageHeader,
@@ -9,6 +10,12 @@ import { Button } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
 import { ExternalLink, Mail } from 'lucide-react';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Full Stack Developer | Next.js, MERN, DevOps & AI',
+  description:
+    'Ravish Bisht is a Full-Stack Developer specializing in Next.js, MERN Stack, DevOps, and AI integration. Explore portfolio, projects, and blog.',
+};
 
 const IntroductionPage = async () => {
   return (
