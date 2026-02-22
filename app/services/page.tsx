@@ -1,55 +1,53 @@
-// app/services/page.tsx
-// ─── Pure Server Component ── SEO-optimised ─────────────────────────────────
-import type { Metadata } from "next";
-import ScrollCTAButton from "@/components/ui/ScrollCTAButton";
-import Pager from "@/components/pager";
+import type { Metadata } from 'next';
+import ScrollCTAButton from '@/components/ui/ScrollCTAButton';
+import Pager from '@/components/pager';
 
 // ─── SEO Metadata ────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  title: "Services | Ravish — Full-Stack Web Developer",
+  title: 'Services | Ravish — Full-Stack Web Developer',
   description:
-    "Explore professional web development services including Full-Stack Development with Next.js & MERN, Backend & API Engineering, DevOps, Performance Optimisation, and long-term Maintenance.",
+    'Explore professional web development services including Full-Stack Development with Next.js & MERN, Backend & API Engineering, DevOps, Performance Optimisation, and long-term Maintenance.',
   keywords: [
-    "full-stack web development services",
-    "Next.js developer for hire",
-    "MERN stack development",
-    "Node.js API development",
-    "React developer freelance",
-    "web app development India",
-    "Next.js freelancer",
-    "performance optimisation web",
-    "DevOps deployment services",
+    'full-stack web development services',
+    'Next.js developer for hire',
+    'MERN stack development',
+    'Node.js API development',
+    'React developer freelance',
+    'web app development India',
+    'Next.js freelancer',
+    'performance optimisation web',
+    'DevOps deployment services',
   ],
-  authors: [{ name: "Ravish Bisht", url: "https://cykoravish.cloud" }],
-  creator: "Ravish Bisht",
-  metadataBase: new URL("https://cykoravish.cloud"),
+  authors: [{ name: 'Ravish Bisht', url: 'https://cykoravish.cloud' }],
+  creator: 'Ravish Bisht',
+  metadataBase: new URL('https://cykoravish.cloud'),
   alternates: {
-    canonical: "/services",
+    canonical: 'https://cykoravish.cloud/services',
   },
   openGraph: {
-    title: "Services | Ravish — Full-Stack Web Developer",
+    title: 'Services | Ravish — Full-Stack Web Developer',
     description:
-      "Full-stack web development, API engineering, DevOps, SEO optimisation and maintenance — built with Next.js and the MERN stack.",
-    url: "https://cykoravish.cloud/services",
-    siteName: "Ravish — Developer Portfolio",
-    locale: "en_US",
-    type: "website",
+      'Full-stack web development, API engineering, DevOps, SEO optimisation and maintenance — built with Next.js and the MERN stack.',
+    url: 'https://cykoravish.cloud/services',
+    siteName: 'Ravish — Developer Portfolio',
+    locale: 'en_US',
+    type: 'website',
     images: [
       {
-        url: "/og-services.png",
+        url: '/og-services.png',
         width: 1200,
         height: 630,
-        alt: "Services offered by Ravish — Full-Stack Web Developer",
+        alt: 'Services offered by Ravish — Full-Stack Web Developer',
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Services | Ravish — Full-Stack Web Developer",
+    card: 'summary_large_image',
+    title: 'Services | Ravish — Full-Stack Web Developer',
     description:
-      "Full-stack web development services: Next.js, MERN, API, DevOps, SEO, and maintenance.",
-    images: ["/og-services.png"],
-    creator: "@ravish_bisht",
+      'Full-stack web development services: Next.js, MERN, API, DevOps, SEO, and maintenance.',
+    images: ['/og-services.png'],
+    creator: '@ravish_bisht',
   },
   robots: {
     index: true,
@@ -60,67 +58,67 @@ export const metadata: Metadata = {
 
 // ─── JSON-LD Structured Data ─────────────────────────────────────────────────
 const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: "Ravish — Full-Stack Web Developer",
-  url: "https://cykoravish.cloud",
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'Ravish — Full-Stack Web Developer',
+  url: 'https://cykoravish.cloud',
   description:
-    "Professional web development services including Next.js, MERN stack, API development, DevOps, performance optimisation, and maintenance.",
-  areaServed: "Worldwide",
+    'Professional web development services including Next.js, MERN stack, API development, DevOps, performance optimisation, and maintenance.',
+  areaServed: 'Worldwide',
   serviceType: [
-    "Full-Stack Web Development",
-    "Backend & API Development",
-    "Deployment & DevOps",
-    "Performance & SEO Optimization",
-    "Maintenance & Long-Term Support",
+    'Full-Stack Web Development',
+    'Backend & API Development',
+    'Deployment & DevOps',
+    'Performance & SEO Optimization',
+    'Maintenance & Long-Term Support',
   ],
   hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name: "Web Development Services",
+    '@type': 'OfferCatalog',
+    name: 'Web Development Services',
     itemListElement: [
       {
-        "@type": "Offer",
+        '@type': 'Offer',
         itemOffered: {
-          "@type": "Service",
-          name: "Full-Stack Web Development",
+          '@type': 'Service',
+          name: 'Full-Stack Web Development',
           description:
-            "Custom web applications built with Next.js, React, Node.js, Express, and MongoDB.",
+            'Custom web applications built with Next.js, React, Node.js, Express, and MongoDB.',
         },
       },
       {
-        "@type": "Offer",
+        '@type': 'Offer',
         itemOffered: {
-          "@type": "Service",
-          name: "Backend & API Development",
+          '@type': 'Service',
+          name: 'Backend & API Development',
           description:
-            "Secure REST APIs with JWT auth, MongoDB schema design, and performance optimisation.",
+            'Secure REST APIs with JWT auth, MongoDB schema design, and performance optimisation.',
         },
       },
       {
-        "@type": "Offer",
+        '@type': 'Offer',
         itemOffered: {
-          "@type": "Service",
-          name: "Deployment & DevOps",
+          '@type': 'Service',
+          name: 'Deployment & DevOps',
           description:
-            "VPS, Nginx, Docker containerisation, and CI/CD with GitHub Actions.",
+            'VPS, Nginx, Docker containerisation, and CI/CD with GitHub Actions.',
         },
       },
       {
-        "@type": "Offer",
+        '@type': 'Offer',
         itemOffered: {
-          "@type": "Service",
-          name: "Performance & SEO Optimization",
+          '@type': 'Service',
+          name: 'Performance & SEO Optimization',
           description:
-            "Core Web Vitals, sitemap/robots setup, and Open Graph metadata.",
+            'Core Web Vitals, sitemap/robots setup, and Open Graph metadata.',
         },
       },
       {
-        "@type": "Offer",
+        '@type': 'Offer',
         itemOffered: {
-          "@type": "Service",
-          name: "Maintenance & Long-Term Support",
+          '@type': 'Service',
+          name: 'Maintenance & Long-Term Support',
           description:
-            "Ongoing updates, feature additions, and priority bug resolution.",
+            'Ongoing updates, feature additions, and priority bug resolution.',
         },
       },
     ],
@@ -130,80 +128,80 @@ const jsonLd = {
 // ─── Static data ─────────────────────────────────────────────────────────────
 const services = [
   {
-    emoji: "⚡",
-    title: "Full-Stack Web Development",
+    emoji: '⚡',
+    title: 'Full-Stack Web Development',
     description:
-      "Custom web applications built using Next.js, React, Node.js, Express, and MongoDB. Scalable, responsive, and performance-focused.",
+      'Custom web applications built using Next.js, React, Node.js, Express, and MongoDB. Scalable, responsive, and performance-focused.',
     bullets: [
-      "Custom UI tailored to your brand",
-      "SEO-friendly architecture",
-      "Clean and maintainable code",
+      'Custom UI tailored to your brand',
+      'SEO-friendly architecture',
+      'Clean and maintainable code',
     ],
   },
   {
-    emoji: "🔌",
-    title: "Backend & API Development",
+    emoji: '🔌',
+    title: 'Backend & API Development',
     description:
-      "Secure and scalable REST APIs with proper authentication and solid database architecture.",
+      'Secure and scalable REST APIs with proper authentication and solid database architecture.',
     bullets: [
-      "JWT authentication & authorisation",
-      "MongoDB schema design",
-      "API performance optimisation",
+      'JWT authentication & authorisation',
+      'MongoDB schema design',
+      'API performance optimisation',
     ],
   },
   {
-    emoji: "🚀",
-    title: "Deployment & DevOps",
+    emoji: '🚀',
+    title: 'Deployment & DevOps',
     description:
-      "Reliable production deployments and infrastructure setup for modern applications.",
+      'Reliable production deployments and infrastructure setup for modern applications.',
     bullets: [
-      "VPS & Nginx configuration",
-      "Docker containerisation",
-      "CI/CD with GitHub Actions",
+      'VPS & Nginx configuration',
+      'Docker containerisation',
+      'CI/CD with GitHub Actions',
     ],
   },
   {
-    emoji: "📈",
-    title: "Performance & SEO Optimisation",
+    emoji: '📈',
+    title: 'Performance & SEO Optimisation',
     description:
-      "Improve Lighthouse scores and technical SEO to rank higher and load faster.",
+      'Improve Lighthouse scores and technical SEO to rank higher and load faster.',
     bullets: [
-      "Core Web Vitals improvement",
-      "Sitemap & robots.txt setup",
-      "Metadata & Open Graph optimisation",
+      'Core Web Vitals improvement',
+      'Sitemap & robots.txt setup',
+      'Metadata & Open Graph optimisation',
     ],
   },
   {
-    emoji: "🛠️",
-    title: "Maintenance & Long-Term Support",
+    emoji: '🛠️',
+    title: 'Maintenance & Long-Term Support',
     description:
-      "Ongoing updates, feature improvements, and bug fixes to keep your product running smoothly.",
+      'Ongoing updates, feature improvements, and bug fixes to keep your product running smoothly.',
     bullets: [
-      "Regular code & security audits",
-      "Feature additions & upgrades",
-      "Priority bug resolution",
+      'Regular code & security audits',
+      'Feature additions & upgrades',
+      'Priority bug resolution',
     ],
   },
 ];
 
 const steps = [
   {
-    number: "01",
-    title: "Discussion",
+    number: '01',
+    title: 'Discussion',
     description:
-      "A focused discovery call to understand your goals, timeline, and technical requirements.",
+      'A focused discovery call to understand your goals, timeline, and technical requirements.',
   },
   {
-    number: "02",
-    title: "Development",
+    number: '02',
+    title: 'Development',
     description:
       "Iterative builds with regular check-ins so you're always in the loop as the product takes shape.",
   },
   {
-    number: "03",
-    title: "Launch & Support",
+    number: '03',
+    title: 'Launch & Support',
     description:
-      "Smooth deployment to production followed by monitoring, fixes, and ongoing enhancements.",
+      'Smooth deployment to production followed by monitoring, fixes, and ongoing enhancements.',
   },
 ];
 
@@ -218,11 +216,9 @@ export default function ServicesPage() {
       />
 
       <main className="min-h-screen">
-
         {/* ── Hero ─────────────────────────────────────────────── */}
         <section aria-label="Hero" className="px-4 pb-20 pt-16 sm:pt-20">
           <div className="mx-auto max-w-3xl">
-
             {/* Badge */}
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium tracking-widest text-muted-foreground uppercase">
               <span
@@ -237,8 +233,7 @@ export default function ServicesPage() {
             </h1>
 
             <p className="mb-3 text-lg text-foreground/80 leading-relaxed">
-              Helping startups and businesses build fast, scalable, and modern
-              web applications.
+              I provide professional full-stack web development services using Next.js, React, Node.js, and the MERN stack. From backend API architecture to DevOps deployment and performance optimisation, I help businesses build scalable and production-ready web applications.
             </p>
 
             <p className="mb-8 max-w-xl text-sm text-muted-foreground leading-relaxed">
@@ -433,12 +428,12 @@ export default function ServicesPage() {
             </div>
           </div>
         </section>
-      <Pager
-        prevHref="/projects"
-        nextHref="/skills-tools"
-        prevTitle="Projects"
-        nextTitle="Skills & Tools"
-      />
+        <Pager
+          prevHref="/projects"
+          nextHref="/skills-tools"
+          prevTitle="Projects"
+          nextTitle="Skills & Tools"
+        />
       </main>
     </>
   );
