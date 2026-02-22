@@ -22,9 +22,9 @@ const IntroductionPage = async () => {
     <>
       <PageHeader>
         <PageHeaderHeading>Ravish Bisht</PageHeaderHeading>
-        <PageHeaderHeading className="mt-2 text-muted-foreground">
+        <h2 className="flex flex-col items-start gap-1 py-0 text-2xl font-bold leading-tight tracking-tighter sm:text-3xl md:text-4xl lg:leading-[1.1] mt-2 text-muted-foreground">
           Full-Stack Web Developer | DevOps | AI Integration
-        </PageHeaderHeading>
+        </h2>
         <PageHeaderDescription>
           I am a Full-Stack Web Developer with a strong focus on JavaScript and
           modern web development. I work on building complete web applications

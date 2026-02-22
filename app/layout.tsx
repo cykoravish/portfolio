@@ -26,6 +26,10 @@ export const metadata: Metadata = {
   description:
     'Ravish Bisht is a Full-Stack Developer specializing in Next.js, MERN Stack, DevOps, and AI integration. Explore projects, blog, and production-ready web solutions.',
 
+  alternates: {
+    canonical: siteConfig.url,
+  },
+
   keywords: siteConfig.keywords,
 
   authors: [
