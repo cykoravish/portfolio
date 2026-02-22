@@ -50,7 +50,7 @@ const ContactForm = () => {
             type="text"
             // required
             id="name"
-            placeholder="Your name, your fame"
+            placeholder="Your name"
             className="px-2 py-6"
             name="fullname"
             value={formData.fullname}
