@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Icons } from '@/components/icons';
 import {
   PageHeader,
@@ -8,15 +9,26 @@ import Pager from '@/components/pager';
 import { Badge } from '@/components/ui/badge';
 import { mySkills } from '@/constants';
 
+export const metadata: Metadata = {
+  title: 'Skills & Tools – Next.js, MERN Stack, DevOps & AI',
+  description:
+    'Explore the technical skills and tools used by Ravish Bisht, including Next.js, React, Node.js, MongoDB, DevOps workflows, Docker, and AI integration.',
+  alternates: {
+    canonical: 'https://cykoravish.cloud/skills-tools',
+  },
+};
+
 const SkillsToolsPage = () => {
   return (
     <>
       <PageHeader>
-        <PageHeaderHeading>Skills & Tools</PageHeaderHeading>
-        <PageHeaderHeading className="mt-2 text-muted-foreground">
+        <PageHeaderHeading>
+          Technical Skills & Tools – Full Stack Development
+        </PageHeaderHeading>
+        <h2 className="flex flex-col items-start gap-1 py-0 text-2xl font-bold leading-tight tracking-tighter sm:text-3xl md:text-4xl lg:leading-[1.1] mt-2 text-muted-foreground">
           Tools and technologies I use to build, deploy, and maintain real
           applications
-        </PageHeaderHeading>
+        </h2>
         <PageHeaderDescription>
           I have learned these skills through hands-on practice, real projects,
           and daily work in a startup environment. I focus on using the right
@@ -49,6 +61,21 @@ const SkillsToolsPage = () => {
         nextHref="/experience"
         prevTitle="Services"
         nextTitle="Experience"
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            name: 'Technical Skills',
+            itemListElement: mySkills.map((skill, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              name: skill.title,
+            })),
+          }),
+        }}
       />
     </>
   );
