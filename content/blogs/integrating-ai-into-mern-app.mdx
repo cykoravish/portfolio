@@ -6,13 +6,15 @@ tags: ["AI", "OpenAI", "MERN"]
 readingTime: "7 min read"
 ---
 
-Everyone's adding AI to everything now. I wanted to see what the hype was about. So I added GPT to my app.
+Everyone's adding AI to everything now. I wanted to see what the hype was about. So I added GPT to one of my [MERN applications](/projects).
 
 The integration was surprisingly easy. The aftermath was more complicated.
 
 ## The First Integration
 
 OpenAI's API is straightforward. Get an API key, install the package, make a call:
+
+Since most of my backend runs on [Node.js with Express](/skills-tools), integrating the OpenAI SDK was simple.
 
 ```javascript
 const response = await openai.chat.completions.create({
@@ -51,10 +53,10 @@ Things that helped:
 
 ## The Cost Problem
 
-API calls add up fast. Each request costs money. Users don't care about your API bill.
+API calls add up fast, especially once deployed in production as part of a broader [DevOps workflow](/services).
 
 I made every mistake:
-- Not caching responses for similar inputs
+- Not caching responses for similar inputs — something I already learned while optimizing my [Node.js API performance](/blog/improving-nodejs-api-performance).
 - Calling the API on every keystroke
 - Using GPT-4 when 3.5 was fine
 - No rate limiting per user
