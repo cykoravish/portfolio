@@ -106,6 +106,39 @@ export default function RootLayout({ children }: RootLayoutProps) {
             `,
             }}
           />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'Person',
+                name: 'Ravish Bisht',
+                url: 'https://cykoravish.cloud',
+                image: 'https://cykoravish.cloud/og-image.png',
+                jobTitle: 'Full Stack Developer',
+                description:
+                  'Full Stack Developer specializing in Next.js, MERN Stack, DevOps, and AI integration.',
+                sameAs: [
+                  'https://github.com/cykoravish',
+                  'https://x.com/ravish_bisht',
+                  'https://www.linkedin.com/in/ravish-bisht-b607083a7/',
+                  'https://t.me/cykoravish',
+                ],
+                knowsAbout: [
+                  'Next.js',
+                  'React',
+                  'Node.js',
+                  'MERN Stack',
+                  'MongoDB',
+                  'DevOps',
+                  'Docker',
+                  'CI/CD',
+                  'AI Integration',
+                  'JavaScript',
+                ],
+              }),
+            }}
+          />
         </head>
         <body
           className={cn(
