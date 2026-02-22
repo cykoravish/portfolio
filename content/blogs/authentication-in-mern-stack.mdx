@@ -6,7 +6,7 @@ tags: ["Authentication", "Security", "MERN"]
 readingTime: "9 min read"
 ---
 
-Authentication seemed straightforward when I started. User enters credentials, you send back a token, they're logged in. Simple, right?
+Authentication in [MERN stack application](/projects) seemed straightforward when I started. User enters credentials, you send back a token, they're logged in. Simple, right?
 
 Then reality hit. Where should this token live? What happens when it expires? Can someone steal it? Before I knew it, I was knee-deep in security concepts I'd never heard of.
 
@@ -15,6 +15,8 @@ Here's what I learned from doing it wrong multiple times.
 ## Version One: LocalStorage (Seemed Fine Until It Wasn't)
 
 My first attempt followed what I saw in most YouTube tutorials. Store the JWT in localStorage, include it in the Authorization header with every request. Clean, easy to understand.
+
+Since most of my stack is built with [Node.js and React](/skills-tools), I assumed JWTs would be straightforward to implement.
 
 And it worked! Users could log in, make authenticated requests, everything functioned as expected.
 
@@ -30,7 +32,7 @@ Except nothing worked.
 
 My frontend made requests to the backend, but the cookie never showed up. I checked the browser dev tools, checked my backend logs, double-checked my code. The cookie was being set, but not sent.
 
-Spent an entire Saturday figuring out it was a CORS issue. Cross-origin requests don't include cookies by default. You have to explicitly tell both sides to handle credentials.
+This became even more important once I started deploying to production environments and handling cross-origin requests properly as part of my [DevOps deployment process](/services).
 
 Here's what finally worked:
 ```javascript
@@ -101,6 +103,8 @@ These days, before I call auth "done," I make sure:
 - JWT payload doesn't contain sensitive data (it's base64, not encrypted)
 - Passwords are hashed with bcrypt, minimum 10 rounds
 - Refresh token rotation is working if I'm using them
+
+I also make sure these auth changes go through automated tests before deployment, which I wrote about in my guide on [setting up CI/CD for MERN with GitHub Actions](/blog/ci-cd-mern-github-actions).
 
 ## Still Not Totally Confident
 
