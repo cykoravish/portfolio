@@ -1,12 +1,12 @@
 ---
-title: "Setting Up CI/CD for MERN: My GitHub Actions Journey"
-date: "2026-02-01"
+title: 'Setting Up CI/CD for MERN: My GitHub Actions Journey'
+date: '2026-02-01'
 description: "Automated deployments sounded scary until I actually set them up. Here's how I went from manual FTP uploads to proper CI/CD."
-tags: ["CI/CD", "GitHub Actions", "DevOps"]
-readingTime: "7 min read"
+tags: ['CI/CD', 'GitHub Actions', 'DevOps']
+readingTime: '7 min read'
 ---
 
-For the longest time, I deployed my apps by uploading files through FTP. Yeah, in 2024. I'm not proud of it.
+For the longest time, I deployed my [MERN applications](/projects) by uploading files through FTP. Yeah, in 2024. I'm not proud of it.
 
 Every single deployment made me nervous. Did I remember to upload that new API route? Did I accidentally put the files in the wrong directory? Did I just break production because I forgot to update an environment variable?
 
@@ -16,7 +16,7 @@ Then I finally set up CI/CD, and I wish I'd done it years earlier.
 
 ## Why I Avoided It For So Long
 
-Those YAML configuration files looked terrifying. All the indentation, the nested structures, the syntax that would break if you added one extra space. It felt like something only DevOps engineers with years of experience could understand.
+Those YAML configuration files looked terrifying. All the indentation, the nested structures, the syntax that would break if you added one extra space. It felt like something only [DevOps engineers](/services) with years of experience could understand.
 
 Turns out I was overthinking it. A CI/CD workflow is really just a list of commands that run automatically when something happens in your repository. Push code? Run tests. Merge to main? Deploy to production. That's basically it.
 
@@ -25,6 +25,7 @@ Turns out I was overthinking it. A CI/CD workflow is really just a list of comma
 I didn't jump straight into automated deployments. My first workflow was dead simple: run tests whenever someone opens a pull request.
 
 Here's the entire thing:
+
 ```yaml
 name: Test
 on: [pull_request]
@@ -46,7 +47,7 @@ Seven lines of actual code. That's it. But now if someone (including me) tries t
 
 Getting tests to run was straightforward. Actually deploying to my VPS? That took some figuring out.
 
-I'm not using Vercel or Netlify. I've got a VPS where I run my own Docker containers. So the workflow needs to SSH into my server, pull the latest code, rebuild containers, and restart everything.
+I'm not using Vercel or Netlify. I've got a VPS where I run my own [Docker containers](/services). So the workflow needs to SSH into my server, pull the latest code, rebuild containers, and restart everything.
 
 The part that made me uncomfortable was giving GitHub's servers SSH access to my production machine. What if someone compromised my repository? What if the keys leaked somehow?
 
@@ -84,6 +85,7 @@ The whole process takes about 4 minutes. I used to spend 20-30 minutes doing thi
 At first, every workflow run took forever because npm was installing all dependencies from scratch. Hundreds of packages, every single time.
 
 Then I learned about caching. GitHub Actions can save your `node_modules` and reuse them if your `package-lock.json` hasn't changed.
+
 ```yaml
 - uses: actions/cache@v4
   with:
@@ -98,6 +100,8 @@ This one addition cut my build time in half. Now it only does a full install whe
 Not everything worked on the first try. Or the second. Or the fifth.
 
 **Different Node versions:** My tests passed locally but failed in CI. Turned out I was running Node 18 on my machine and the workflow was using Node 16. Added an explicit version to the workflow and the problem disappeared.
+
+Since most of my stack is built with [Next.js and Node.js](/skills-tools), keeping versions aligned between local and CI environments became critical.
 
 **Missing MongoDB:** My tests expected a local MongoDB instance. Obviously GitHub's runners don't have that. I ended up using `mongodb-memory-server` for tests so they run in an isolated environment without needing a real database.
 
