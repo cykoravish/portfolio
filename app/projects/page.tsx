@@ -1,4 +1,9 @@
-import { PageHeader, PageHeaderHeading } from '@/components/page-header';
+import { Metadata } from 'next';
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+} from '@/components/page-header';
 import Pager from '@/components/pager';
 import {
   Card,
@@ -9,14 +14,29 @@ import {
 import { projects } from '@/constants/projects';
 import Link from 'next/link';
 
+export const metadata: Metadata = {
+  title: 'Full Stack Developer Projects – Next.js & MERN Applications',
+  description:
+    'Explore real-world Full Stack projects built with Next.js, MERN Stack, DevOps practices, and AI integration by Ravish Bisht.',
+  alternates: {
+    canonical: 'https://cykoravish.cloud/projects',
+  },
+};
+
 const ProjectsPage = () => {
   return (
     <>
       <PageHeader className="mb-10">
-        <PageHeaderHeading>Projects</PageHeaderHeading>
-        <PageHeaderHeading className="mt-2 text-muted-foreground">
+        <PageHeaderHeading> Full Stack Developer Projects – Next.js & MERN Applications</PageHeaderHeading>
+        <h2 className="flex flex-col items-start gap-1 py-0 text-2xl font-bold leading-tight tracking-tighter sm:text-3xl md:text-4xl lg:leading-[1.1] mt-2 text-muted-foreground">
           Real-world projects focused on solving practical problems
-        </PageHeaderHeading>
+        </h2>
+        <PageHeaderDescription>
+          Below are some of the real-world applications I have built using
+          Next.js, React, Node.js, MongoDB, and DevOps deployment practices.
+          These projects demonstrate my expertise in building scalable,
+          production-ready web applications.
+        </PageHeaderDescription>
       </PageHeader>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 card-container">

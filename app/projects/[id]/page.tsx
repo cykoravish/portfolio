@@ -1,4 +1,28 @@
+import { Metadata } from 'next';
 import { projects } from '@/constants/projects';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const project = projects.find((p) => p.slug === params.id);
+
+  if (!project) {
+    return {
+      title: 'Project Not Found',
+    };
+  }
+
+  return {
+    title: `${project.title} – Full Stack Project`,
+    description: project.overview,
+    alternates: {
+      canonical: `https://cykoravish.cloud/projects/${project.slug}`,
+    },
+  };
+}
+
 import {
   PageHeader,
   PageHeaderDescription,
@@ -146,8 +170,33 @@ const ProjectDetails = async ({
           </div>
         )}
       </div>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'SoftwareApplication',
+            name: project.title,
+            description: project.overview,
+            applicationCategory: 'WebApplication',
+            author: {
+              '@type': 'Person',
+              name: 'Ravish Bisht',
+              url: 'https://cykoravish.cloud',
+            },
+            url: `https://cykoravish.cloud/projects/${project.slug}`,
+          }),
+        }}
+      />
     </div>
   );
 };
+
+export async function generateStaticParams() {
+  return projects.map((project) => ({
+    id: project.slug,
+  }));
+}
 
 export default ProjectDetails;
