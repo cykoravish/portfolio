@@ -6,7 +6,7 @@ tags: ["Node.js", "Performance", "Backend"]
 readingTime: "8 min read"
 ---
 
-My API was slow. Not unusably slow, but slow enough that users noticed. The dashboard took 3 seconds to load. That's forever in web time.
+My Node.js API inside one of my [MERN stack projects](/projects) was slow. Not unusably slow, but slow enough that users noticed. The dashboard took 3 seconds to load. That's forever in web time.
 
 I spent two weeks optimizing. Here's what actually moved the needle.
 
@@ -44,7 +44,7 @@ Response time dropped from 2 seconds to 200ms.
 
 ## Indexes
 
-I had no indexes on my frequently queried fields. MongoDB was doing full collection scans on every request.
+I had no indexes on my frequently queried fields. Since I use [MongoDB with Node.js](/skills-tools) for most backend work, missing indexes became a real bottleneck.
 
 Added indexes to the fields I filter and sort by:
 
@@ -60,7 +60,7 @@ Some queries went from 500ms to 5ms. Not a typo.
 
 Some data rarely changes but gets requested constantly. User profiles, app settings, category lists. Perfect for caching.
 
-I used Redis at first. Then realized for my scale, an in-memory cache was enough. Node-cache did the job.
+I used Redis at first as part of my broader [DevOps optimization setup](/services). Then realized for my scale, an in-memory cache was enough. Node-cache did the job.
 
 ```javascript
 const cache = new NodeCache({ stdTTL: 300 })
@@ -98,7 +98,7 @@ Should have done this from the start.
 ## What Didn't Help
 
 - Switching to a faster JSON serializer. Barely noticeable.
-- Adding more RAM to the server. The bottleneck was I/O, not memory.
+- Adding more RAM to the server. The bottleneck was I/O, not memory. I realized this the hard way while deploying on a VPS, which I wrote about in my post on [deploying MERN on a VPS](/blog/deploying-mern-on-vps).
 - Using clustering. Made things worse because my code wasn't thread-safe.
 
 ## Current State
