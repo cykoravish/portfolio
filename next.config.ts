@@ -8,6 +8,7 @@ const manifestHeaders = [
 ];
  
 const nextConfig: NextConfig = {
+  output: "standalone",
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
