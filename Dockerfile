@@ -3,14 +3,10 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies first (better caching)
 COPY package.json package-lock.json* ./
-RUN npm install
+RUN npm ci
 
-# Copy rest of the source code
 COPY . .
-
-# Build Next.js app
 RUN npm run build
 
 
@@ -21,13 +17,11 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copy only what is needed to run the app
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/.next ./.next
+# Only copy standalone output
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.ts ./next.config.ts
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
