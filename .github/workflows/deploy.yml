@@ -21,6 +21,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ${{ secrets.SSH_PATH }}
-            git pull
+            git pull origin main
             docker compose build
             docker compose up -d

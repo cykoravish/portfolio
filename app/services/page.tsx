@@ -6,7 +6,7 @@ import Pager from '@/components/pager';
 export const metadata: Metadata = {
   title: 'Services | Ravish — Full-Stack Web Developer',
   description:
-    'Explore professional web development services including Full-Stack Development with Next.js & MERN, Backend & API Engineering, DevOps, Performance Optimisation, and long-term Maintenance.',
+    'I build full stack websites as a freelancer and provide related services end to end from development to deployment at affordable and flexible prices.',
   keywords: [
     'full-stack web development services',
     'Next.js developer for hire',
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Services | Ravish — Full-Stack Web Developer',
     description:
-      'Full-stack web development services: Next.js, MERN, API, DevOps, SEO, and maintenance.',
+      'Full-stack web development services- Next.js, MERN, API, DevOps, SEO, and maintenance.',
     images: ['/og-services.png'],
     creator: '@ravish_bisht',
   },

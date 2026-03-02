@@ -8,7 +8,7 @@ import Pager from '@/components/pager';
 import ContactForm from './ContactForm';
 
 export const metadata: Metadata = {
-  title: 'Contact Ravish Bisht | Full Stack Developer',
+  title: 'Contact Ravish Bisht | Full Stack website Developer | MERN, Next.js & DevOps',
   description:
     'Get in touch with Ravish Bisht for freelance projects, collaborations, full-stack development opportunities, or technical discussions about MERN, DevOps, and AI integration.',
   alternates: {

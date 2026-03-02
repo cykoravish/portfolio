@@ -9,7 +9,7 @@ import Pager from '@/components/pager';
 export const metadata: Metadata = {
   title: 'About Ravish Bisht – Full Stack Developer',
   description:
-    'Learn about Ravish Bisht, a self-taught Full Stack Developer specializing in Next.js, MERN Stack, DevOps, and AI integration. Discover his journey, experience, and technical expertise.',
+    'Learn about Ravish Bisht, a self-taught Full Stack Developer expert in building scalable and beautiful websites and backend apis with ai integration. Discover his journey, experience, and technical expertise.',
   alternates: {
     canonical: 'https://cykoravish.cloud/about',
   },

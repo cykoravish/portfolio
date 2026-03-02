@@ -122,6 +122,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 jobTitle: 'Full Stack Developer',
                 description:
                   'Full Stack Developer specializing in Next.js, MERN Stack, DevOps, and AI integration.',
+                worksFor: {
+                  '@type': 'Organization',
+                  name: 'Freelance',
+                },
+                address: {
+                  '@type': 'PostalAddress',
+                  addressCountry: 'IN',
+                },
                 sameAs: [
                   'https://github.com/cykoravish',
                   'https://x.com/ravish_bisht',
@@ -140,6 +148,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
                   'AI Integration',
                   'JavaScript',
                 ],
+                potentialAction: {
+                  '@type': 'ContactAction',
+                  target: 'https://cykoravish.cloud/contact',
+                },
               }),
             }}
           />
