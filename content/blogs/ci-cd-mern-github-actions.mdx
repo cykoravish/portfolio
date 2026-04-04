@@ -6,25 +6,25 @@ tags: ['CI/CD', 'GitHub Actions', 'DevOps']
 readingTime: '7 min read'
 ---
 
-For the longest time, I deployed my [MERN applications](/projects) by uploading files through FTP. Yeah, in 2024. I'm not proud of it.
+For a while there, I was just uploading files via FTP to deploy my [MERN applications](/projects). You know, the ones in my projects folder. And this was even in 2024. It feels kind of silly now, I guess.
 
-Every single deployment made me nervous. Did I remember to upload that new API route? Did I accidentally put the files in the wrong directory? Did I just break production because I forgot to update an environment variable?
+Deploying like that always got me anxious. Like, did I upload the right API route this time? Or put stuff in the wrong spot by mistake? Sometimes I worried I broke everything in production just because of some forgotten environment variable. It seems dumb, but it happened a lot.
 
-It was stressful, error-prone, and honestly embarrassing when other developers asked about my deployment process.
+The whole thing was super stressful and full of mistakes. I mean, error-prone is the word for it. And it got embarrassing too, especially when other devs would ask how I handled deployments. They probably thought I was behind or something.
 
-Then I finally set up CI/CD, and I wish I'd done it years earlier.
+I finally got CI/CD set up, though. Wish I had bothered with it way sooner. Years, really. That would have saved so much hassle.
 
 ## Why I Avoided It For So Long
 
-Those YAML configuration files looked terrifying. All the indentation, the nested structures, the syntax that would break if you added one extra space. It felt like something only [DevOps engineers](/services) with years of experience could understand.
+YAML configuration files scared me. They had a lot of indentation and nested structures. The syntax was also very specific. If I added one space everything would break. I thought [DevOps engineers](/services) with a lot of experience could understand YAML configuration files.
 
-Turns out I was overthinking it. A CI/CD workflow is really just a list of commands that run automatically when something happens in your repository. Push code? Run tests. Merge to main? Deploy to production. That's basically it.
+I was thinking about it too much. A CI/CD workflow is really a list of things that happen automatically. When I push code the CI/CD workflow runs tests. When I merge code to the branch the CI/CD workflow deploys it to production. That is basically what a CI/CD workflow does.
 
 ## Starting Small: Just Run the Tests
 
-I didn't jump straight into automated deployments. My first workflow was dead simple: run tests whenever someone opens a pull request.
+I did not jump straight into automated deployments. My first workflow was really simple: I just made it run tests whenever someone opens a GitHub pull request.
 
-Here's the entire thing:
+Here is the entire thing:
 
 ```yaml
 name: Test
@@ -41,50 +41,50 @@ jobs:
       - run: npm test
 ```
 
-Seven lines of actual code. That's it. But now if someone (including me) tries to merge broken code, the tests catch it automatically. No more "oops, forgot to run tests before merging."
+I have seven lines of code that actually work. That is all.. Now if someone, including me tries to merge code that does not work the tests catch it automatically. No more saying "oh no I forgot to run tests before merging."
 
-## The Deployment Part Was Trickier
+## The Deployment Part Was Harder
 
-Getting tests to run was straightforward. Actually deploying to my VPS? That took some figuring out.
+Getting the tests to run was easy. Actually putting my project on my VPS was a lot harder.
 
-I'm not using Vercel or Netlify. I've got a VPS where I run my own [Docker containers](/services). So the workflow needs to SSH into my server, pull the latest code, rebuild containers, and restart everything.
+I do not use Vercel or Netlify. I have a VPS where I run my [Docker containers](/services). So I need to set up my workflow to connect to my server get the code rebuild the containers and start everything again.
 
-The part that made me uncomfortable was giving GitHub's servers SSH access to my production machine. What if someone compromised my repository? What if the keys leaked somehow?
+The part that made me feel unsure was giving GitHub access, to my production machine. What if someone gets into my repository? What if the keys get out somehow?
 
-Turns out you can create deploy keys with very limited permissions. They can only pull code and restart specific services, nothing else. And GitHub stores them encrypted. Still felt weird the first time, but it's actually pretty secure.
+It turns out you can make special deploy keys that can only do a things. They can only get code. Restart certain services, nothing else.. Github keeps them secret. I still felt a bit weird the time I did it but it is actually pretty safe. My Docker containers are secure now.
 
-## I Leaked a Secret (But GitHub Saved Me)
+## I Leaked a Secret. Github Saved Me
 
-GitHub has this feature where you store sensitive values like API keys and SSH keys as "secrets" in your repository settings. The workflow references them by name, and GitHub never exposes the actual values in logs.
+GitHub has a feature to store values like API keys and SSH keys as secrets in your repository settings. The workflow uses the names and GitHub does not show the actual values in logs.
 
-Cool feature. Very useful.
+That is a feature. It is very useful. I still messed it up. I was trying to find out why my environment variables were not loading. So I added a step to print out my `.env` file.
 
-I still managed to mess it up.
+I pushed the code. Watched the workflow run. Then I saw my database password in the logs. It was there for anyone to see. I panicked for 30 seconds. Then I noticed GitHub had automatically hidden it.
 
-I was debugging why my environment variables weren't loading, so I added a step to print out my `.env` file. Pushed the code, watched the workflow run, and there was my database password. In the public logs. For anyone to see.
+They saw it was a secret. Replaced it with `***` in the output. The crisis was over.
 
-Panicked for about 30 seconds before I noticed GitHub had automatically masked it. They detected it was a secret and replaced it with `***` in the output. Crisis averted, but I learned to be way more careful about what I print during debugging.
+I learned to be much more careful about what I print during debugging. I will be more careful with my secrets from, on. GitHub saved me from a mistake.
 
 ## What My Deployment Actually Does
 
-After a bunch of trial and error, here's what happens when I push to the main branch:
+So after lots of trying and failing here's what happens when I push to the branch:
 
-1. Run all the tests (if these fail, everything stops)
-2. Build the React frontend with environment variables
-3. Build a Docker image with both frontend and backend
-4. Push the image to Docker Hub
-5. SSH into my VPS
-6. Pull the new image
-7. Stop the old containers
-8. Start new containers with the updated image
+1. All tests are run. If they fail everything stops.
+2. The React frontend is built with environment variables.
+3. A Docker image, with both frontend and backend is built.
+4. The image is pushed to Docker Hub.
+5. I connect to my VPS using SSH.
+6. I pull the image.
+7. The old containers are stopped.
+8. New containers are started with the updated image.
 
-The whole process takes about 4 minutes. I used to spend 20-30 minutes doing this manually, double-checking every step, and still making mistakes. Now I just merge the PR and go get coffee.
+The whole process takes 4 minutes. Before I spent 20-30 minutes doing this manually checking every step twice and still making mistakes. Now I just merge the request and go get a cup of coffee.
 
 ## Caching Made It Way Faster
 
-At first, every workflow run took forever because npm was installing all dependencies from scratch. Hundreds of packages, every single time.
+At first every workflow run took a long time because npm was installing all the dependencies from scratch. This was happening every time and it was really slow. There were hundreds of packages to install.
 
-Then I learned about caching. GitHub Actions can save your `node_modules` and reuse them if your `package-lock.json` hasn't changed.
+Then I found out about caching. I learned that GitHub Actions can save your node modules and use them again if your package lock json file has not changed. This is a help because now GitHub Actions can just use the node modules it saved before instead of installing everything all over again.
 
 ```yaml
 - uses: actions/cache@v4
@@ -93,40 +93,40 @@ Then I learned about caching. GitHub Actions can save your `node_modules` and re
     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 ```
 
-This one addition cut my build time in half. Now it only does a full install when I actually add or update packages.
+This change really helped. It cut my build time in half. Now my system only does an installation when I add new packages or update existing ones.
 
-## Things That Broke (And How I Fixed Them)
+## Things That Went Wrong (. How I Fixed Them)
 
-Not everything worked on the first try. Or the second. Or the fifth.
+Things did not go as planned at first.. The second time.. Even the fifth time.
 
-**Different Node versions:** My tests passed locally but failed in CI. Turned out I was running Node 18 on my machine and the workflow was using Node 16. Added an explicit version to the workflow and the problem disappeared.
+**Using versions of Node:** My tests worked on my computer. They failed when I used the continuous integration tool. I found out that I was using Node version 18 on my computer and the continuous integration tool was using Node version 16. So I added the version of Node to the integration tool and the problem was fixed.
 
-Since most of my stack is built with [Next.js and Node.js](/skills-tools), keeping versions aligned between local and CI environments became critical.
+Since my project uses Next.js and Node.js it is very important that the versions of these tools are the same on my computer and on the integration tool.
 
-**Missing MongoDB:** My tests expected a local MongoDB instance. Obviously GitHub's runners don't have that. I ended up using `mongodb-memory-server` for tests so they run in an isolated environment without needing a real database.
+**Not having MongoDB:** My tests needed a local MongoDB database to run.. The continuous integration tool on GitHub does not have MongoDB. So I used a tool called mongodb-memory-server to run my tests. This tool lets my tests run without needing a MongoDB database.
 
-**Environment-specific bugs:** Code that worked on my Mac would fail on the Ubuntu runner because of path separators or case sensitivity differences. Now I try to write code that doesn't depend on OS-specific behavior.
+**Bugs that only happened on systems:** Sometimes my code would work on my Mac. It would not work on the Ubuntu system used by the continuous integration tool. This was because of differences in how the systems handle file paths and case sensitivity. Now I try to write code that works the same on all systems.
 
-**Flaky tests:** Some tests would pass 90% of the time and randomly fail the other 10%. Super frustrating. Turned out they had timing issues or relied on external APIs. Fixed them to be more deterministic.
+**Tests that did not always work:** Some of my tests would work most of the time. Sometimes they would fail. This was very frustrating. I found out that these tests had problems, with timing or they relied on applications. So I fixed them to make them more reliable.
 
-Each failure was annoying at the time, but I learned something from every one. Now I barely have to touch the workflow. It just runs.
+Each time something went wrong it was annoying.. I learned something new each time. Now my continuous integration tool works smoothly. I hardly ever need to make any changes to it. It just works.
 
-## The Real Benefit Isn't Speed
+## The Real Benefit Is Not Speed
 
-Yeah, automated deployments are faster than doing it manually. But that's not why I love CI/CD.
+I think automated deployments are faster than doing things.. That is not why I like Continuous Integration and Continuous Deployment.
 
-The real benefit is confidence.
+The real benefit is feeling confident.
 
-Before, every deployment was a gamble. I'd push code and hope nothing broke. I'd watch server logs for errors, ready to roll back if something went wrong.
+Before every time I deployed something it was like taking a chance. I would send code. Hope that nothing went wrong. I would look at server logs to see if there were any errors and I was ready to go to a previous version if something did go wrong.
 
-Now? If the tests pass and the workflow succeeds, I know the code works. I can merge a PR, close my laptop, and not worry about it. That peace of mind is worth way more than the time saved.
+Now if the tests are okay and the workflow works I know the code is good. I can put the code together close my laptop. Not worry about it. Feeling calm like that is worth more than the time I save.
 
-## I Still Watch It Run Sometimes
+## I Still Watch It Sometimes
 
-Old habits die hard. Even though I trust the workflow, I sometimes open GitHub Actions and watch the steps execute. See the tests pass, watch the build complete, confirm the deployment succeeded.
+Old habits are hard to break. Even though I trust the workflow I sometimes look at GitHub Actions. Watch the steps happen. I see the tests pass I watch the build finish I make sure the deployment was successful.
 
-I don't have to do this. The workflow will send me a notification if something fails. But there's something satisfying about seeing all those green checkmarks.
+I do not have to do this. The workflow will tell me if something goes wrong.. It feels good to see all those checks that say everything is okay.
 
-Maybe I'll stop eventually. Or maybe I won't. Either way, I'm not going back to FTP uploads.
+Maybe I will stop doing this one day.. Maybe I will not. Either way I am not going back, to uploading files with FTP.
 
-If you're still deploying manually, just start with a simple test workflow. You don't need to automate everything at once. Get comfortable with YAML, add one step at a time, and before you know it, you'll wonder how you ever deployed any other way.
+If you are still deploying things manually start with a simple test workflow. You do not have to automate everything at the time. Get used to using YAML add one step at a time and before you know it you will wonder how you ever deployed things in any way.

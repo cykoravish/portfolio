@@ -6,33 +6,35 @@ tags: ["Authentication", "Security", "MERN"]
 readingTime: "9 min read"
 ---
 
-Authentication in [MERN stack application](/projects) seemed straightforward when I started. User enters credentials, you send back a token, they're logged in. Simple, right?
+I thought authentication in a [MERN stack application](/projects) was going to be easy when I first started. The user types in their username and password. Then you send them a special token. After that the user is logged in to the MERN stack application. It sounds simple.. The thing is, authentication, in a MERN stack application is not that simple.
 
-Then reality hit. Where should this token live? What happens when it expires? Can someone steal it? Before I knew it, I was knee-deep in security concepts I'd never heard of.
+Then reality hit me. Where should I put this token? What happens when the token expires? Can someone take the token from me? Before I knew it I was in a lot of trouble, with security ideas that I did not know about.
 
-Here's what I learned from doing it wrong multiple times.
+Here is what I learned from making mistakes with the many times.
 
 ## Version One: LocalStorage (Seemed Fine Until It Wasn't)
 
-My first attempt followed what I saw in most YouTube tutorials. Store the JWT in localStorage, include it in the Authorization header with every request. Clean, easy to understand.
+I tried to store the JWT in LocalStorage. This is what I saw in YouTube tutorials. I stored the JWT in LocalStorage. Included it in the Authorization header with every request. It was clean and easy to understand.
 
-Since most of my stack is built with [Node.js and React](/skills-tools) I assumed JWTs would be straightforward to implement.
+I use [Node.js and React](/skills-tools) for most of my work. So I thought JWTs would be easy to use.
 
-And it worked! Users could log in, make authenticated requests, everything functioned as expected.
+It worked. Users could log in. Make requests that needed authorization. Everything worked like it should.
 
-Then a developer friend looked at my code during a code review session. "You're storing tokens in localStorage?" he asked. I said yes, wondering what the problem was.
+Then a friend who is a developer looked at my code. We were going over my code together. He said "you are storing tokens in LocalStorage?" I said yes. I did not know what the problem was.
 
-Turns out, any JavaScript running on your page can access localStorage. If someone manages to inject malicious code through an XSS vulnerability, they can just grab the token and send it to themselves. I had no idea this was even a thing.
+He told me that any JavaScript code that runs on my page can look at LocalStorage. If someone can add code to my page because of an XSS vulnerability they can take the token and send it to themselves. I did not know this was possible, with LocalStorage and JWT.
 
 ## Version Two: Cookies (And the CORS Nightmare)
 
-So I switched to HTTP-only cookies. The browser automatically sends them with requests, and JavaScript can't touch them. Seemed like the perfect solution.
+I decided to use HTTP- cookies. This meant that the browser would send them with every request and JavaScript could not do anything with them. It seemed like a solution. Nothing worked out.
 
-Except nothing worked.
+My frontend was making requests, to the backend. The cookie was never sent with these requests.
 
-My frontend made requests to the backend, but the cookie never showed up. I checked the browser dev tools, checked my backend logs, double-checked my code. The cookie was being set, but not sent.
+I looked at the browser tools to see what was happening I looked at my backend logs. I even looked at my code again to make sure everything was correct. The cookie was being set,. It was not being sent with the requests.
 
-This became even more important once I started deploying to production environments and handling cross-origin requests properly as part of my [DevOps deployment process](/services).
+This became a problem when I started to deploy my application to production environments and I had to handle requests that came from different places, which is part of my [DevOps deployment process](/services).
+
+I had to deal with -origin requests and this was very important. The cookie issue was still a problem. I had to find a way to solve it.
 
 Here's what finally worked:
 ```javascript
@@ -48,72 +50,82 @@ fetch(url, {
 })
 ```
 
-Both the server and client have to agree to send credentials. Miss either one and it silently fails. Lovely.
+The server and the client have to be, on the page when it comes to sending credentials. If either the server or the client misses this step it will just fail without saying anything. The server and the client really need to agree on this or else the server and the client will not work together properly. This is really frustrating because the server and the client will not give you any warning if something goes wrong.
 
-## The Constant Logout Problem
+## The Logout Problem
 
-My access tokens expired after one hour. Seemed reasonable for security. But in practice, users got kicked out constantly. Mid-workflow, mid-form-filling, mid-everything.
+My access tokens would expire after one hour, which seemed like a good idea for security.. The thing is, users would get kicked out all the time. This would happen when they were in the middle of doing something like filling out a form or working on a project.
 
-Really annoying user experience.
+This was really frustrating for the users. It was not an experience at all.
 
-This is where refresh tokens come in. The idea is you have two tokens: a short-lived access token (15 minutes) for actual API requests, and a long-lived refresh token (7 days) that can get you a new access token without logging in again.
+Then I learned about refresh tokens. The idea behind them is that you have two kinds of tokens. You have a lived access token that lasts for a short time like 15 minutes and you use this token to make requests to the application programming interface.. Then you have a long-lived refresh token that lasts for a longer time, like 7 days and you use this token to get a new access token when the old one expires.
 
-The refresh token sits in an HTTP-only cookie. When the access token expires, you use the refresh token to get a fresh one. User stays logged in, but if someone steals the access token, it's only valid for 15 minutes.
+I store the refresh token in a kind of cookie that can only be accessed by the web server. When the access token expires I use the refresh token to get an access token. This way the user can stay logged in without having to log in.. If someone gets their hands on the access token it will only work for a short time like 15 minutes.
 
-The tricky part is making sure refresh tokens can't be reused maliciously. I store them in the database with the user ID, and when a new one gets issued, the old one is invalidated. Not perfect, but way better than my first attempt.
+The hard part is making sure that refresh tokens cannot be used in a way. To solve this problem I store the refresh tokens in the database along with the user ID. When I issue a new refresh token I make sure the old one does not work anymore. This is not a solution but it is a lot better, than what I had before.
 
-## Wait, How Do You Actually Log Out?
+## Logging Out with JWTs. A Head Scratcher
 
-This one messed with my head for a while.
+I had a time figuring this out.
 
-With JWTs, the token is still valid until it expires, even if the user clicks "logout." You can't really invalidate it because JWTs are stateless. They're just cryptographically signed data, not something you can revoke on the server.
+When using JWTs the token stays valid until it expires even if a user clicks the "logout" button. You can't simply invalidate it because JWTs are stateless. They are data that is cryptographically signed not something that can be revoked on the server.
 
-Some people keep a blocklist of invalidated tokens, but then you're back to hitting the database on every request, which defeats the whole stateless benefit.
+Some developers keep a list of tokens but that means checking the database for every request, which defeats the purpose of statelessness.
 
-My solution: I keep a token version number in the user record. When someone logs out, I increment their version. Every token includes the version it was issued for. If the versions don't match during validation, the token is rejected, even if it hasn't expired yet.
+My approach is to store a version number in the users record. When someone logs out I increase their version number. Each token includes the version it was issued for. If the versions do not match during validation the token is rejected, even if it has not expired yet.
 
-Is this the "right" way? I don't know. But it works and doesn't feel too hacky.
+Is this the way to do it? I am not sure.. It works and does not feel too complicated.
 
 ## Passwords and Timing Attacks
 
-I knew to use bcrypt for password hashing. That's like rule number one of auth, right?
+I knew to use bcrypt for password hashing. That's rule number one for authentication right?
 
-What I didn't know about was timing attacks. Apparently, if you compare passwords with a regular string comparison, attackers can measure how long the comparison takes and use that to guess the password character by character.
+I didn't know about timing attacks. When you compare passwords with a string comparison attackers can measure how long it takes. They can use this to guess the password character by character.
 
-Sounds paranoid, but it's a real thing.
+It sounds a bit paranoid. Timing attacks are real.
 
-Thankfully, `bcrypt.compare()` does constant-time comparison automatically. But I had written some custom validation logic that didn't, and that could have been vulnerable. Removed that code real quick.
+Thankfully bcrypts compare function does constant-time comparison automatically. I had written custom validation logic that didn't. That could have been vulnerable. I removed the code quickly.
 
 ## Should I Have Just Used Sessions?
 
-Here's the thing. After all this, I realized that sessions with server-side storage might have been simpler for my use case.
+Here's the thing. After all this I realized sessions with server-side storage might have been simpler for my use case.
 
-JWTs are great if you're building a mobile app, or if you need to share authentication across multiple services, or if you really need stateless auth. But for a standard web app talking to its own backend? Session cookies are perfectly fine and way less complicated.
+JSON Web Tokens or JWTs are great for apps. They're also great if you need to share authentication across services or if you really need stateless authentication.. For a standard web app talking to its own backend? Session cookies are fine and less complicated.
 
-But honestly, I'm glad I went through the pain of implementing JWTs. I understand the tradeoffs now. I know why someone would choose one over the other instead of just following whatever the tutorial said.
+I'm glad I implemented JWTs. I understand the tradeoffs now. I know why someone would choose one, over the other. I didn't just follow a tutorial.
 
 ## My Current Checklist
 
-These days, before I call auth "done," I make sure:
+These days before I say that authentication is done I make sure that authentication is really done. I do a things to make sure of this.
 
-- Tokens are in HTTP-only cookies (or use sessions)
-- `Secure` flag is set in production so cookies only go over HTTPS
-- `SameSite` attribute is configured to prevent CSRF attacks
-- Login endpoint has rate limiting so people can't brute force passwords
-- JWT payload doesn't contain sensitive data (it's base64, not encrypted)
-- Passwords are hashed with bcrypt, minimum 10 rounds
-- Refresh token rotation is working if I'm using them
+- We store tokens in HTTP- cookies or we use sessions.
+- In production we set the `flag so that cookies are only sent over HTTPS.
+- The `SameSite` attribute is set up to stop CSRF attacks.
+- The login endpoint has rate limits to prevent people from trying lots of passwords.
+- The JWT payload does not have data because it is base64 encoded not encrypted.
+- Passwords are hashed using bcrypt, with least 10 rounds.
+- If I use refresh tokens I make sure to rotate them.
 
-I also make sure these auth changes go through automated tests before deployment, which I wrote about in my guide on [setting up CI/CD for MERN with GitHub Actions](/blog/ci-cd-mern-github-actions).
+I also make sure that these authentication changes go through automated tests before they are deployed. This is something that I wrote about in my guide on [setting up CI/CD](/blog/ci-cd-mern-github-actions), for MERN with GitHub Actions.
 
-## Still Not Totally Confident
+## Not Totally Confident
 
-Even now, I still get a little nervous about auth.
+I still get a little nervous about authentication.
 
-Every few months some new vulnerability gets disclosed and I wonder if my implementation is affected. I'll read an article about session fixation or token sidejacking and go double-check my code.
+Every months some new vulnerability gets found and I wonder if my authentication implementation is affected.
 
-Maybe that's a good thing. Auth is one of those areas where a healthy dose of paranoia probably keeps you from getting lazy.
+I will read an article about session fixation or token sidejacking. I will go double-check my authentication code.
 
-I'm not an expert. I'm just someone who's messed it up enough times to know what not to do.
+Maybe that is a thing.
 
-If you're building auth for the first time, you'll probably make such mistakes. That's fine. Just fix them before you go to production.
+Authentication is one of those areas where being a little paranoid probably keeps you from getting lazy with your authentication.
+
+I am not an expert, in authentication.
+
+I am someone who has messed up authentication enough times to know what not to do with authentication.
+
+If you are building authentication for the time you will probably make mistakes with your authentication.
+
+That is fine.
+
+Just fix your authentication mistakes before you go to production with your authentication.

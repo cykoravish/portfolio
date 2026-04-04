@@ -6,51 +6,51 @@ tags: ["Deployment", "VPS", "DevOps"]
 readingTime: "9 min read"
 ---
 
-Vercel is stupid easy. Push your code, get a URL, done. Same with Railway and Render. They handle everything for you.
+Vercel is very easy. Push your code, get a link, and you're done. Railway and Render are the same. They take care of everything for you.
 
-But I wanted to know what was actually happening under the hood. So I rented a VPS and decided to deploy my [MERN application](/projects) the old-fashioned way.
+But I wanted to know what was really going on behind the scenes. I rented a VPS and decided to set up my [MERN application](/projects) the old-fashioned way.
 
-Took me three weeks to get everything working properly. I learned a lot. I also developed some strong opinions.
+Took me three weeks to get everything up and running. I picked up a lot along the way. I also formed some strong views, on things.
 
 ## Picking a Server
 
-I went with Hetzner because everyone on Reddit said they were cheap and reliable. Got their basic plan: $5/month for 2GB RAM and 1 CPU core. Seemed like plenty for a small side project.
+I chose Hetzner because people on Reddit said they were affordable and worked well. I got the plan from Hetzner for five dollars per month. This plan gives you two gigabytes of RAM and one CPU core. I thought this would be enough for my project.
 
-Spoiler: it wasn't.
+It was not enough.
 
-MongoDB alone wants at least 1GB of RAM to run comfortably. Node takes another chunk. Then you need space for the React build process, which can spike during compilation. I was constantly running out of memory and the build would just die halfway through.
+MongoDB needs least one gigabyte of RAM to work properly. Node takes some of the RAM too. Then you need some space for the React build process. This process can use a lot of memory when it is compiling. I always ran out of memory. The build would stop working halfway through.
 
-If you're actually doing this, start with at least $10-12/month for a server with 4GB RAM. Save yourself the headache.
+If you are really doing this you should start with a server that costs least ten to twelve dollars, per month. This server should have least four gigabytes of RAM. This will save you a lot of trouble with Hetzner.
 
 ## The First Login Was Intimidating
 
-Fresh server, just a command prompt. No GUI, no helpful tooltips, just `root@server:~#` staring at me.
+I got a server and all I saw was a command prompt. There was no graphical user interface and no helpful tips to guide me. I was faced with `root@server:~#` and I had to figure out what to do.
 
-I had no clue where to even start.
+I did not know where to start.
 
-After reading way too many blog posts and DigitalOcean tutorials, here's the order that actually made sense:
+I read a lot of blog posts and DigitalOcean tutorials. After that I found out what I had to do. Here is what I did:
 
-1. Update all the packages (`apt update && apt upgrade`)
-2. Create a new user (running everything as root is apparently a bad idea)
-3. Set up SSH keys and disable password login
-4. Configure the firewall to only allow ports I actually need
-5. Install fail2ban to block brute force attacks
+1. I updated all the packages by using ` update && apt upgrade`.
+2. I created an user because running everything as root is not a good idea.
+3. I set up SSH keys and I disabled password login.
+4. I configured the firewall to only allow the ports that my server actually needs.
+5. I installed fail2ban to block attacks from people who try to guess my password times.
 
-The security stuff felt excessive at first. Who's going to attack my tiny personal project server?
+At first I thought all the security measures were too much for my personal project server. I thought who would want to attack my server.
 
-Then I checked the auth logs a few hours later. Literally thousands of login attempts from random IP addresses in China, Russia, Eastern Europe. Bots just scanning the internet for open SSH ports and trying common passwords.
+Then I checked the login logs a hours later. What I saw was shocking. There were thousands of login attempts from different internet addresses in China, Russia and Eastern Europe. These were automated programs that scan the internet for open SSH ports and try common passwords.
 
-Kind of eye-opening. The internet is a hostile place.
+This was a wake up call for me. The internet can be a hostile place, for my server.
 
 ## Installing All the Things
 
-Next step: get [Node.js and MongoDB](/skills-tools), Nginx, and PM2 installed. Each one has its own multi-step process.
+The next thing to do is to get [Node.js and MongoDB](/skills-tools) Nginx and PM2 installed. Each one needs to be set up in a steps.
 
-MongoDB especially was annoying. You can't just `apt install mongodb`. You have to add their repository, import their GPG key, update your sources list, and *then* install. Six different commands just to get a database running.
+MongoDB was really frustrating to install. You can't just install it with a command. First you need to add their repository then import their GPG key update your list of sources and after that you can install it. That is six commands just to get a database up and running.
 
-I made a bash script to automate the whole setup process. Took me longer to write the script than to just do it manually once, but now if I ever need to recreate the server or set up a new one, I can just run the script.
+I created a bash script to make the whole setup process easier. It took me longer to write the script than to do it manually. Now if I need to set up a new server or recreate this one I can just run the script.
 
-Future me will thank present me. Probably.
+Future me will probably be thankful to present me for doing this.
 
 ## Making Nginx Work
 
@@ -74,17 +74,17 @@ server {
 }
 ```
 
-Straightforward enough. Except my app uses WebSockets for real-time updates, and those weren't working. Spent an entire evening debugging before I found out you need those `Upgrade` and `Connection` headers for WebSocket support.
+Straightforward enough. Except my app uses WebSockets for real-time updates and those weren't working. I spent an evening trying to figure out what was wrong. Then I found out that you need to add the `Upgrade` and `Connection` headers, for WebSocket support.
 
-Added those two lines, everything started working. Cool.
+I added those two lines and everything started working. That was pretty cool.
 
-## SSL Certificates (Easier Than Expected)
+## SSL Certificates Are Actually Simple
 
-HTTPS used to be this complicated thing with paid certificates and manual renewal. Now Let's Encrypt gives you free SSL and Certbot automates the whole process.
+I used to think HTTPS was a big deal with expensive certificates and a lot of work to renew them.. Now SSL certificates are free thanks to Lets Encrypt and Certbot does all the work for you.
 
-Just run `certbot --nginx`, answer a few questions about your domain, and it modifies your Nginx config automatically. Your site is now HTTPS.
+You just have to run `certbot --nginx` and answer a questions about your domain. Then Certbot changes your Nginx settings for you. After that your website is secure with HTTPS.
 
-One catch: the certificates expire every 90 days. Certbot sets up auto-renewal, but I've heard stories of it failing silently and people suddenly getting browser warnings about expired certificates. I added a calendar reminder to manually check every few months just in case.
+There is one thing to watch out for: SSL certificates last, for 90 days. Certbot is supposed to renew them but I have heard that sometimes it does not work right and people get warnings in their browser about expired SSL certificates. So I made a note on my calendar to check on it every months just to be safe. SSL certificates are easy to get with Lets Encrypt and Certbot. You have to keep an eye on them.
 
 ## Keeping the App Running
 
@@ -99,48 +99,50 @@ pm2 startup
 
 That last command creates a startup script so PM2 and your app come back up if the server reboots.
 
-Now I can actually close my SSH session without the app dying. Revolutionary.
+Now I can actually close my SSH session without the app dying. This is really great.
 
 ## The Deployment Problem
 
-At first, I deployed by SSHing into the server, running `git pull`, then `npm install`, then restarting PM2. Every. Single. Time.
+When I first started I would deploy my project by logging into the server using SSH then I would run `git pull` followed by `npm install`. Finally I would restart PM2. I had to do this every time.
 
-It worked, but it was tedious. And I kept forgetting steps. Or I'd run the commands in the wrong order and something would break.
+It was a working method. It was really boring and time consuming. I would often forget some of the steps. I would do them in the wrong order and that would cause problems.
 
-Eventually I wrote a deploy script that GitHub Actions runs whenever I push to main as part of my broader [DevOps deployment workflow](/services). The workflow SSHs into the server and runs all the commands automatically. I wrote more about that process in my guide on [setting up CI/CD for MERN with GitHub Actions](/blog/ci-cd-mern-github-actions). Tests pass, code deploys. No manual work.
+So I decided to create a script that would deploy my project automatically. I set it up with GitHub Actions so now it runs every time I push my changes to the branch as part of my DevOps deployment workflow. This [workflow](/services) logs into the server. Runs all the necessary commands for me. I wrote about how I did this in my guide on [setting up CI/CD for MERN with GitHub Actions](/blog/ci-cd-mern-github-actions), with GitHub Actions. Now my tests. My code gets deployed without me having to do anything manually.
 
-Still not as smooth as Vercel where you just get automatic preview deployments and rollbacks and all that. But at least I understand what's actually happening now.
+My deployment process is still not as easy to use as Vercel. With Vercel you get preview deployments and rollbacks which's really nice. At now I know what is going on with my deployment process and that is a big improvement.
 
 ## How I Know When Things Break
 
-For a while, the server could have been down for hours and I wouldn't have known unless I happened to check.
+For a while my server could have been down for hours and I would not have known about it unless I happened to check the server.
 
-Set up UptimeRobot on their free tier. It pings my site every 5 minutes and sends me an email if it's unreachable. Not sophisticated, but it works.
+I set up UptimeRobot on their tier. UptimeRobot pings my site every 5 minutes. Sends me an email if my site is unreachable. This is not a solution but it works for me.
 
-For actual server metrics like CPU and memory usage, I just use `htop` when I SSH in. I know there are proper monitoring tools like Grafana and Prometheus, but that felt like overkill for a side project. Maybe someday.
+For server metrics like CPU usage and memory usage I just use `htop` when I log in to my server using SSH. I know that there are monitoring tools, like Grafana and Prometheus but these tools felt like overkill for my side project. Maybe I will use them someday for my side project.
 
 ## Things I'd Change If I Started Over
 
-Looking back, I would've done a few things differently:
+If I had to start over again there are a few things I would do differently:
 
-**Start with more RAM.** The $5 tier is too small for MERN. Just spend the extra $5-7/month and save yourself the constant out-of-memory errors.
+**Start with RAM.** The five dollar tier is too small for MERN. Just spend the five to seven dollars per month and save yourself the constant out of memory errors. This will really help you in the run.
 
-**Use Docker from day one.** I'm running everything directly on the server, which means if I ever want to move to a different VPS, I have to reconfigure everything. With Docker, I could just move the containers.
+You will have problems with your MERN application.
 
-**Set up automated backups immediately.** I didn't think about this until I was already live. Then I realized if the server crashed or I messed something up, I had no way to recover. Now I have daily backups, but I should've done that before launch.
+**Use Docker from day one.** I am running everything directly on the server. This means if I ever want to move to a virtual private server I have to reconfigure everything. This is a lot of work. With Docker I could just move the Docker containers. This would make my life much easier. I would not have to reconfigure everything.
 
-**Use a managed database.** Running MongoDB myself means I'm responsible for updates, backups, security, everything. I've had to restore from backup twice now. Both times were stressful. A managed service like MongoDB Atlas would handle that for me. Worth the extra cost.
+**Set up automated backups immediately.** I did not think about this until I was already live with my application. Then I realized if the server crashed or I messed something up I had no way to recover my application. Now I have backups of my MERN application but I should have done that before I launched it.
+
+**Use a managed database.** Running MongoDB myself means I am responsible for updates and backups and security and everything. I have had to restore from backup now for my MongoDB database. Both times were very stressful for me. A managed service like MongoDB Atlas would handle that for me and my MongoDB database. It is worth the cost, for my MongoDB database.
 
 ## Was This Whole Thing Worth It?
 
-Honestly? I'm not sure.
+To be honest I am still unsure.
 
-On one hand, I learned a ton. I actually understand what happens when you deploy an app now. I can troubleshoot server issues instead of just clicking buttons and hoping. That knowledge feels valuable.
+On one hand I gained a lot of knowledge. I now actually know what happens when you deploy an application. I can troubleshoot server problems of just clicking buttons and hoping for the best. That knowledge seems valuable to me.
 
-On the other hand, it took three weeks to set up something that would've taken 10 minutes on Vercel. And I still spend time maintaining the server, updating packages, checking logs, making sure everything's running smoothly.
+On the hand it took me three weeks to set up something that would have taken only 10 minutes on Vercel.. I still spend time maintaining the server, updating packages checking logs and making sure everything is running smoothly.
 
-For most projects, especially client work or anything on a deadline, managed platforms are absolutely the right choice. Less maintenance, better uptime, more time to actually build features.
+For projects, especially client work or anything with a deadline managed platforms are definitely the right choice. They require maintenance offer better uptime and give you more time to actually build features.
 
-But I think every developer should go through the VPS deployment process at least once. It demystifies a lot of the "magic" that hosting platforms do behind the scenes. Plus the knowledge transfers to other areas. Understanding servers helps you write better code.
+However I think every developer should go through the VPS deployment process least once. It helps you understand a lot of the "magic" that hosting platforms do behind the scenes.. The knowledge you gain transfers, to other areas. Understanding servers helps you write code and deploy applications.
 
-Would I do it again for my next project? Probably not. But I'm glad I did it once.
+Would I do it again for my project? Probably not.. I am glad I did it once and I learned server deployment.
