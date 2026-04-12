@@ -6,19 +6,21 @@ tags: ["Node.js", "Performance", "Backend"]
 readingTime: "8 min read"
 ---
 
-My Node.js API inside one of my [MERN stack projects](/projects) was slow. Not unusably slow, but slow enough that users noticed. The dashboard took 3 seconds to load. That's forever in web time.
+My Node.js API in one of my [MERN stack projects](/projects) was running slow. It was not so slow that it was unusable. It was slow enough for my users to notice. The dashboard took a 3 seconds to load, which is a really long time when you are waiting for a website to load.
 
-I spent two weeks optimizing. Here's what actually moved the needle.
+I worked on making it faster, for two weeks. Here is what actually made my Node.js API faster.
 
 ## Finding the Problem First
 
-I started optimizing random things before measuring anything. Don't do this.
+I made a mistake when I started trying to make things faster without checking what was slow. I should have checked first. I added logging with timestamps to every operation.
 
-Added logging with timestamps to every major operation. Found out 80% of the time was spent in two database queries. I was optimizing the wrong things entirely.
+Then I found out that the database queries were taking a lot of time 80 percent of the total time. I was trying to make the wrong things faster which was a waste of time.
+
+The database queries were the things that needed to be made faster not the things I was working on.
 
 ## The N+1 Query Problem
 
-This was my biggest issue. I was fetching a list of items, then running a separate query for each item's related data.
+This was my issue. I was getting a list of items then I had to get the related data for each item, which meant I was running a query for every single item. The N+1 Query Problem was really causing me trouble. I had to fetch the related data for each item one, by one which was a problem. The N+1 Query Problem was my issue.
 
 ```javascript
 // Bad: N+1 queries
@@ -44,9 +46,9 @@ Response time dropped from 2 seconds to 200ms.
 
 ## Indexes
 
-I had no indexes on my frequently queried fields. Since I use [MongoDB with Node.js](/skills-tools) for most backend work, missing indexes became a real bottleneck.
+I did not have indexes on the fields I query often. Since I work with [MongoDB and Node.js](/skills-tools) for most of my backend tasks the lack of indexes really slowed things down.
 
-Added indexes to the fields I filter and sort by:
+I added indexes to the fields that I use to filter and sort data:
 
 ```javascript
 postSchema.index({ authorId: 1 })
@@ -58,9 +60,9 @@ Some queries went from 500ms to 5ms. Not a typo.
 
 ## Caching Hot Data
 
-Some data rarely changes but gets requested constantly. User profiles, app settings, category lists. Perfect for caching.
+Some information does not change often but people ask for it all the time. This includes things like user [profiles](/services) the settings for an app and lists of categories. This kind of information is great for caching.
 
-I used Redis at first as part of my broader [DevOps optimization setup](/services). Then realized for my scale, an in-memory cache was enough. Node-cache did the job.
+I started out using Redis because it was part of my plan to make my development and operations work better.. Then I realized that for what I was doing I only needed to store the information in the memory of the computer. That is when I found Node-cache, which did what I needed it to do. Node-cache was a solution, for caching the hot data like user profiles and app settings and category lists.
 
 ```javascript
 const cache = new NodeCache({ stdTTL: 300 })
@@ -75,17 +77,17 @@ async function getCategories() {
 }
 ```
 
-Cache invalidation is the hard part. I went with time-based expiry for most things. Good enough for my use case.
+Cache invalidation is really tough. I decided to use time-based expiry for things. This works well for what I need to do with cache invalidation. Cache invalidation is not perfect. It is good enough, for my use case.
 
 ## Pagination
 
-I was returning all results by default. Thousands of records in a single response. Why did I think that was okay?
+I was giving back all the results by default. That meant I was sending thousands of records in one go. Looking back I wonder why I thought that was an idea. I added a limit and a skip option.
 
-Added limit and skip. Default to 20 items. Now responses are small and fast.
+Now by default I show 20 items at a time. This change has made my responses much smaller and faster.
 
 ## Compression
 
-Enabled gzip compression. Response sizes dropped by 70%. Barely any CPU overhead.
+I turned on gzip compression. This made the response sizes a lot smaller. They went down by 70%. The compression did not slow down the computer all.
 
 One line of code:
 
@@ -95,14 +97,54 @@ app.use(compression())
 
 Should have done this from the start.
 
-## What Didn't Help
+## What Did Not Help
 
-- Switching to a faster JSON serializer. Barely noticeable.
-- Adding more RAM to the server. The bottleneck was I/O, not memory. I realized this the hard way while deploying on a VPS, which I wrote about in my post on [deploying MERN on a VPS](/blog/deploying-mern-on-vps).
-- Using clustering. Made things worse because my code wasn't thread-safe.
+- I tried using a way to handle JSON data. It did not make a difference.
+- I added memory to the server. The problem was not with the memory it was with the input and output. I found this out the way when I was setting up my project on a virtual private server, which I talked about in my post, on [deploying MERN](/blog/deploying-mern-on-vps) on a virtual private server.
+- I used clustering. This actually made things worse because my code was not able to handle tasks at the same time.
 
 ## Current State
 
-The dashboard loads in 400ms now. Still not perfect, but users stopped complaining.
+The dashboard now loads in 400 milliseconds. It is still not perfect. Users have stopped complaining.
 
-The biggest lesson: measure first. I wasted time on micro-optimizations that didn't matter. The real gains came from fixing the obvious stuff I was ignoring.
+The biggest lesson I learned is to measure. I spent a lot of time on optimizations that did not make a difference. The real gains came from fixing the issues that I was ignoring.
+
+## Before vs After Performance
+
+Here’s a quick comparison of what actually changed:
+
+<div style={{ overflowX: 'auto' }}>
+  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr>
+        <th style={{ textAlign: 'left', padding: '8px', borderBottom: '2px solid #ddd' }}>Metric</th>
+        <th style={{ textAlign: 'left', padding: '8px', borderBottom: '2px solid #ddd' }}>Before</th>
+        <th style={{ textAlign: 'left', padding: '8px', borderBottom: '2px solid #ddd' }}>After</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>API Response Time</td>
+        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>~2000ms</td>
+        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>~200ms</td>
+      </tr>
+      <tr>
+        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>DB Query Time</td>
+        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>~500ms</td>
+        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>~5ms</td>
+      </tr>
+      <tr>
+        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>Payload Size</td>
+        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>Large</td>
+        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>Reduced by 70%</td>
+      </tr>
+      <tr>
+        <td style={{ padding: '8px' }}>Dashboard Load</td>
+        <td style={{ padding: '8px' }}>~3 seconds</td>
+        <td style={{ padding: '8px' }}>~400ms</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+These changes were not ideas. We actually measured them in our system. We used user data and logs to track the results. The changes were tested with users. We got the data, from our system logs.

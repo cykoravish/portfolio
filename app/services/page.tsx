@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ScrollCTAButton from '@/components/ui/ScrollCTAButton';
 import Pager from '@/components/pager';
+import Link from 'next/link';
 
 // ─── SEO Metadata ────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
@@ -131,7 +132,7 @@ const services = [
     emoji: '⚡',
     title: 'Full-Stack Web Development',
     description:
-      'Custom web applications built using Next.js, React, Node.js, Express, and MongoDB. Scalable, responsive, and performance-focused.',
+      'I build real-world web applications that are fast, scalable, and built to last. Using Next.js, React, Node.js, and MongoDB, I focus on writing clean, maintainable code while making sure the product performs well in production — not just in development.',
     bullets: [
       'Custom UI tailored to your brand',
       'SEO-friendly architecture',
@@ -233,7 +234,11 @@ export default function ServicesPage() {
             </h1>
 
             <p className="mb-3 text-lg text-foreground/80 leading-relaxed">
-              I provide professional full-stack web development services using Next.js, React, Node.js, and the MERN stack. From backend API architecture to DevOps deployment and performance optimisation, I help businesses build scalable and production-ready web applications.
+              I provide professional full-stack web development services using
+              Next.js, React, Node.js, and the MERN stack. From backend API
+              architecture to DevOps deployment and performance optimisation, I
+              help businesses build scalable and production-ready web
+              applications.
             </p>
 
             <p className="mb-8 max-w-xl text-sm text-muted-foreground leading-relaxed">
@@ -342,6 +347,33 @@ export default function ServicesPage() {
           </div>
         </section>
 
+        <section className="px-4 pb-20 pt-5">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-2xl font-bold mb-4">
+              Real Work, Not Just Promises
+            </h2>
+
+            <p className="text-muted-foreground mb-4 leading-relaxed">
+              I do not just build features I solve performance and scalability
+              problems. For example in one of my projects I improved the API
+              response time from around 2 seconds to, under 200 milliseconds by
+              optimizing the database queries and fixing the inefficient data
+              fetching patterns of the database queries and the data fetching
+              patterns. I solve performance problems and real scalability
+              problems of the API and the database queries.
+            </p>
+
+            <p className="text-muted-foreground leading-relaxed">
+              This kind of improvement directly impacts how users feel when
+              using the product conversions and overall product quality. That is
+              why I focus on real-world solutions instead of just writing code
+              that works. I want to make sure my solutions really help users and
+              make a difference. It is, about making the product better for
+              them.
+            </p>
+          </div>
+        </section>
+
         {/* ── Divider ──────────────────────────────────────────── */}
         <div className="mx-auto max-w-5xl border-t border-border" />
 
@@ -428,6 +460,22 @@ export default function ServicesPage() {
             </div>
           </div>
         </section>
+
+        {/* ── Divider ──────────────────────────────────────────── */}
+        <div className="mx-auto max-w-5xl border-t border-border" />
+
+        <p className="mt-4 text-sm text-muted-foreground">
+          I’ve also written about how I improved API performance in a real-world
+          project. You can read the detailed breakdown here:{' '}
+          <Link
+            href="/blog/improving-nodejs-api-performance"
+            className="text-violet-500 underline hover:text-violet-400"
+          >
+            Node.js API performance optimization case study
+          </Link>
+          .
+        </p>
+
         <Pager
           prevHref="/projects"
           nextHref="/skills-tools"
