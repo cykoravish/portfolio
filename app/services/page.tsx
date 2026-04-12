@@ -236,9 +236,15 @@ export default function ServicesPage() {
             <p className="mb-3 text-lg text-foreground/80 leading-relaxed">
               I provide professional full-stack web development services using
               Next.js, React, Node.js, and the MERN stack. From backend API
-              architecture to DevOps deployment and performance optimisation, I
-              help businesses build scalable and production-ready web
-              applications.
+              architecture to{' '}
+              <Link
+                href="/blog/deploying-mern-on-vps"
+                className="text-violet-500 underline hover:text-violet-400"
+              >
+                DevOps deployment on VPS
+              </Link>{' '}
+              and performance optimisation, I help businesses build scalable and
+              production-ready web applications.
             </p>
 
             <p className="mb-8 max-w-xl text-sm text-muted-foreground leading-relaxed">
@@ -412,6 +418,29 @@ export default function ServicesPage() {
 
         {/* ── Divider ──────────────────────────────────────────── */}
         <div className="mx-auto max-w-5xl border-t border-border" />
+
+        <section className="px-4 py-20">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-2xl font-bold mb-4">
+              Prefer Hiring via Fiverr?
+            </h2>
+
+            <p className="text-muted-foreground mb-6 leading-relaxed">
+              If you like working on Fiverr for payments and an organized
+              project process I am also available there. You can check my Fiverr
+              gigs my reviews and my packages away.
+            </p>
+
+            <a
+              href="https://www.fiverr.com/s/2K24qvk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-green-500"
+            >
+              View My Fiverr Profile
+            </a>
+          </div>
+        </section>
 
         {/* ── Final CTA ─────────────────────────────────────────── */}
         <section id="contact" aria-label="Contact" className="px-4 py-20">
