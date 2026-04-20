@@ -219,7 +219,7 @@ export default function ServicesPage() {
       <main className="min-h-screen">
         {/* ── Hero ─────────────────────────────────────────────── */}
         <section aria-label="Hero" className="px-4 pb-20 pt-16 sm:pt-20">
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto">
             {/* Badge */}
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium tracking-widest text-muted-foreground uppercase">
               <span
@@ -354,7 +354,7 @@ export default function ServicesPage() {
         </section>
 
         <section className="px-4 pb-20 pt-5">
-          <div className="mx-auto max-w-3xl">
+          <div className="">
             <h2 className="text-2xl font-bold mb-4">
               Real Work, Not Just Promises
             </h2>

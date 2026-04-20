@@ -53,6 +53,9 @@ const IntroductionPage = async () => {
               Send Mail
             </Link>
           </Button>
+          <Button asChild size="sm" variant="outline" className="rounded-md">
+            <Link href="/services">View Services</Link>
+          </Button>
         </PageActions>
       </PageHeader>
 
