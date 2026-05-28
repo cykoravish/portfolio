@@ -494,7 +494,7 @@ export default function ServicesPage() {
         <div className="mx-auto max-w-5xl border-t border-border" />
 
         <p className="mt-4 text-sm text-muted-foreground">
-          I’ve also written about how I improved API performance in a real-world
+          I&apos;ve also written about how I improved API performance in a real-world
           project. You can read the detailed breakdown here:{' '}
           <Link
             href="/blog/improving-nodejs-api-performance"
